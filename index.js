@@ -215,6 +215,13 @@ if (body.startsWith('@menu')) {
                     caption: menuText 
                 }, { quoted: m })
 }
+            if (body.startsWith('@owner')) {
+                await conn.sendMessage(from, { text: '"Him": https://github.com/Friomademyday/' }, { quoted: m })
+            }
+
+            if (body.startsWith('@repo')) {
+                await conn.sendMessage(from, { text: '📦 *THE-FRiO-BOT REPO:*\n\nhttps://github.com/Friomademyday/THE-FRIO-BOT-MD-/' }, { quoted: m })
+            }
 
             if (body.startsWith('@joke')) {
                 const joke = jokes[Math.floor(Math.random() * jokes.length)]
