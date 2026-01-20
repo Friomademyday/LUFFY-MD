@@ -7,6 +7,7 @@ const {
 const pino = require("pino")
 const { Boom } = require("@hapi/boom")
 const chalk = require("chalk")
+const fs = require("fs")
 
 async function startFrioBot() {
     const { state, saveCreds } = await useMultiFileAuthState('FrioSession')
@@ -54,6 +55,34 @@ async function startFrioBot() {
             const from = m.key.remoteJid
             const type = Object.keys(m.message)[0]
             const body = (type === 'conversation') ? m.message.conversation : (type == 'extendedTextMessage') ? m.message.extendedTextMessage.text : ''
+       const sender = m.key.participant || m.key.remoteJid
+const isCreator = ["2348076874766@s.whatsapp.net"].includes(sender) || m.key.fromMe
+
+if (!fs.existsSync('./economyData.json')) fs.writeFileSync('./economyData.json', JSON.stringify({}))
+let db = JSON.parse(fs.readFileSync('./economyData.json'))
+            if (!fs.existsSync('./groupData.json')) fs.writeFileSync('./groupData.json', JSON.stringify({}))
+let gdb = JSON.parse(fs.readFileSync('./groupData.json'))
+
+if (m.key.remoteJid.endsWith('@g.us') && !gdb[from]) {
+    gdb[from] = {
+        antilink: false,
+        mute: false
+    }
+    fs.writeFileSync('./groupData.json', JSON.stringify(gdb, null, 2))
+}
+
+            if (m.key.remoteJid.endsWith('@g.us') && gdb[from] && gdb[from].antilink && body.includes('chat.whatsapp.com')) {
+    const groupMetadata = await conn.groupMetadata(from)
+    const botNumber = conn.user.id.split(':')[0] + '@s.whatsapp.net'
+    const isBotAdmin = groupMetadata.participants.find(p => p.id === botNumber)?.admin
+    const isSenderAdmin = groupMetadata.participants.find(p => p.id === sender)?.admin
+
+    if (!body.includes(from.split('@')[0]) && isBotAdmin && !isSenderAdmin && !isCreator) {
+        await conn.sendMessage(from, { delete: m.key })
+        await conn.sendMessage(from, { text: `🚫 Links are not allowed here!` })
+    }
+            }
+            
             
             if (body.startsWith('@ping')) {
                 await conn.sendMessage(from, { text: 'Pong! 🏓 THE-FRiO-BOT is active.' }, { quoted: m })
@@ -149,6 +178,47 @@ async function startFrioBot() {
                 })
                 await conn.sendMessage(from, { text, mentions: board.map(u => u.id) }, { quoted: m })
             }
+
+            if (body.startsWith('@demote')) {
+                const groupMetadata = await conn.groupMetadata(from)
+                const botNumber = conn.user.id.split(':')[0] + '@s.whatsapp.net'
+                const isBotAdmin = groupMetadata.participants.find(p => p.id === botNumber)?.admin
+                const isSenderAdmin = groupMetadata.participants.find(p => p.id === sender)?.admin
+
+                if (!isBotAdmin) return await conn.sendMessage(from, { text: 'I need admin powers to demote others.' })
+                if (!isSenderAdmin && !isCreator) return
+
+                let users = m.message.extendedTextMessage?.contextInfo?.mentionedJid || []
+                if (m.message.extendedTextMessage?.contextInfo?.quotedMessage) {
+                    users.push(m.message.extendedTextMessage.contextInfo.participant)
+                }
+                if (users.length === 0) return await conn.sendMessage(from, { text: 'Tag or reply to someone to demote.' })
+                
+                await conn.groupParticipantsUpdate(from, users, "demote")
+                await conn.sendMessage(from, { text: '✅ User(s) demoted to Member.' })
+            }
+
+            if (body.startsWith('@hidetag')) {
+                const groupMetadata = await conn.groupMetadata(from)
+                const isSenderAdmin = groupMetadata.participants.find(p => p.id === sender)?.admin
+                if (!isSenderAdmin && !isCreator) return
+
+                let participants = groupMetadata.participants
+                await conn.sendMessage(from, { text: body.slice(9) || 'Hello everyone!', mentions: participants.map(a => a.id) })
+            }
+
+            if (body.startsWith('@link')) {
+                const groupMetadata = await conn.groupMetadata(from)
+                const botNumber = conn.user.id.split(':')[0] + '@s.whatsapp.net'
+                const isBotAdmin = groupMetadata.participants.find(p => p.id === botNumber)?.admin
+                if (!isBotAdmin) return await conn.sendMessage(from, { text: 'I need to be an admin to generate the link.' })
+                
+                const code = await conn.groupInviteCode(from)
+                await conn.sendMessage(from, { text: `https://chat.whatsapp.com/${code}` }, { quoted: m })
+                                                                      }
+
+
+            
         } catch (err) {
             console.log(err)
         }
