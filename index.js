@@ -3,8 +3,7 @@ const {
     useMultiFileAuthState, 
     DisconnectReason, 
     makeInMemoryStore,
-    fetchLatestBaileysVersion,
-    jidDecode
+    fetchLatestBaileysVersion
 } = require("@whiskeysockets/baileys")
 const pino = require("pino")
 const { Boom } = require("@hapi/boom")
@@ -111,7 +110,7 @@ async function startFrioBot() {
                 }
                 
                 if (!isCreator) {
-                    db[sender].balance += 1000
+                    db[sender].balance = (db[sender].balance || 0) + 1000
                 }
                 db[sender].lastDaily = Date.now()
                 fs.writeFileSync('./economyData.json', JSON.stringify(db, null, 2))
