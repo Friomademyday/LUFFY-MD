@@ -81,6 +81,8 @@ if (m.key.remoteJid.endsWith('@g.us') && !gdb[from]) {
         await conn.sendMessage(from, { delete: m.key })
         await conn.sendMessage(from, { text: `🚫 Links are not allowed here!` })
     }
+
+                if (!db[sender]) db[sender] = { balance: 0, lastDaily: 0 }
             }
 
             const jokes = [
@@ -219,14 +221,132 @@ if (body.startsWith('@menu')) {
                 await conn.sendMessage(from, { text: '"Him": https://github.com/Friomademyday/' }, { quoted: m })
             }
 
+            if (body.startsWith('@promote')) {
+                const groupMetadata = await conn.groupMetadata(from)
+                const botNumber = conn.user.id.split(':')[0] + '@s.whatsapp.net'
+                const isBotAdmin = groupMetadata.participants.find(p => p.id === botNumber)?.admin
+                const isSenderAdmin = groupMetadata.participants.find(p => p.id === sender)?.admin
+                if (!isBotAdmin) return await conn.sendMessage(from, { text: 'I need admin powers to promote others.' })
+                if (!isSenderAdmin && !isCreator) return
+                let users = m.message.extendedTextMessage?.contextInfo?.mentionedJid || []
+                if (m.message.extendedTextMessage?.contextInfo?.quotedMessage) {
+                    users.push(m.message.extendedTextMessage.contextInfo.participant)
+                }
+                if (users.length === 0) return await conn.sendMessage(from, { text: 'Tag or reply to someone to promote.' })
+                await conn.groupParticipantsUpdate(from, users, "promote")
+                await conn.sendMessage(from, { text: '✅ User(s) promoted to Admin.' })
+            }
+
+            if (body.startsWith('@tagall')) {
+                const groupMetadata = await conn.groupMetadata(from)
+                const isSenderAdmin = groupMetadata.participants.find(p => p.id === sender)?.admin
+                if (!isSenderAdmin && !isCreator) return
+                const participants = groupMetadata.participants
+                let message = `📢 *ATTENTION EVERYONE*\n\n`
+                message += body.slice(8) || 'The Captain is calling!'
+                message += `\n\n`
+                for (let mem of participants) {
+                    message += `⚓ @${mem.id.split('@')[0]}\n`
+                }
+                await conn.sendMessage(from, { text: message, mentions: participants.map(a => a.id) })
+            }
+
             if (body.startsWith('@repo')) {
                 await conn.sendMessage(from, { text: '📦 *THE-FRiO-BOT REPO:*\n\nhttps://github.com/Friomademyday/THE-FRIO-BOT-MD-/' }, { quoted: m })
+            }
+
+            if (body.startsWith('@sticker') || body.startsWith('@s')) {
+                const isQuotedImage = type === 'extendedTextMessage' && m.message.extendedTextMessage.contextInfo.quotedMessage?.imageMessage
+                const isQuotedVideo = type === 'extendedTextMessage' && m.message.extendedTextMessage.contextInfo.quotedMessage?.videoMessage
+                
+                let buffer
+                if (type === 'imageMessage' || isQuotedImage) {
+                    const message = isQuotedImage ? m.message.extendedTextMessage.contextInfo.quotedMessage.imageMessage : m.message.imageMessage
+                    const stream = await downloadContentFromMessage(message, 'image')
+                    let b = Buffer.from([])
+                    for await(const chunk of stream) { b = Buffer.concat([b, chunk]) }
+                    buffer = b
+                } else if (type === 'videoMessage' || isQuotedVideo) {
+                    const message = isQuotedVideo ? m.message.extendedTextMessage.contextInfo.quotedMessage.videoMessage : m.message.videoMessage
+                    if (message.seconds > 10) return await conn.sendMessage(from, { text: 'Video too long!' })
+                    const stream = await downloadContentFromMessage(message, 'video')
+                    let b = Buffer.from([])
+                    for await(const chunk of stream) { b = Buffer.concat([b, chunk]) }
+                    buffer = b
+                }
+
+                if (buffer) {
+                    await conn.sendMessage(from, { 
+                        sticker: buffer, 
+                        packname: 'THE-FRiO-BOT', 
+                        author: 'FRiO' 
+                    }, { quoted: m })
+                } else {
+                    await conn.sendMessage(from, { text: 'Reply to an image or video!' })
+                }
             }
 
             if (body.startsWith('@joke')) {
                 const joke = jokes[Math.floor(Math.random() * jokes.length)]
                 await conn.sendMessage(from, { text: joke }, { quoted: m })
             }
+
+            if (body.startsWith('@tts')) {
+                const text = body.slice(5)
+                if (!text) return await conn.sendMessage(from, { text: 'Give me some text to speak!' })
+                const url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=en&client=tw-ob`
+                await conn.sendMessage(from, { audio: { url: url }, fileName: 'tts.mp3', mimetype: 'audio/mpeg', ptt: true }, { quoted: m })
+            }
+
+            if (body.startsWith('@toimg')) {
+                const isQuotedSticker = type === 'extendedTextMessage' && m.message.extendedTextMessage.contextInfo.quotedMessage?.stickerMessage
+                if (!isQuotedSticker) return await conn.sendMessage(from, { text: 'Reply to a non-animated sticker to convert it to an image.' })
+                const stream = await downloadContentFromMessage(m.message.extendedTextMessage.contextInfo.quotedMessage.stickerMessage, 'image')
+                let buffer = Buffer.from([])
+                for await(const chunk of stream) { buffer = Buffer.concat([buffer, chunk]) }
+                await conn.sendMessage(from, { image: buffer, caption: 'Done! ✨' }, { quoted: m })
+                    }
+
+            if (body.startsWith('@tiktok')) {
+                const url = body.slice(8)
+                if (!url) return await conn.sendMessage(from, { text: 'Please provide a TikTok link!' })
+                const response = await fetch(`https://api.tiklydown.eu.org/api/download?url=${url}`)
+                const data = await response.json()
+                await conn.sendMessage(from, { video: { url: data.video.noWatermark }, caption: 'Here is your TikTok video!' }, { quoted: m })
+            }
+
+            if (body.startsWith('@insta')) {
+                const url = body.slice(7)
+                if (!url) return await conn.sendMessage(from, { text: 'Please provide an Instagram link!' })
+                const res = await fetch(`https://api.vreden.my.id/api/igdownload?url=${url}`)
+                const data = await res.json()
+                await conn.sendMessage(from, { video: { url: data.result[0].url }, caption: 'Here is your Instagram media!' }, { quoted: m })
+            }
+
+            if (body.startsWith('@spotify')) {
+                const query = body.slice(9)
+                if (!query) return await conn.sendMessage(from, { text: 'What song should I search for?' })
+                const res = await fetch(`https://api.vreden.my.id/api/spotify?query=${query}`)
+                const data = await res.json()
+                await conn.sendMessage(from, { audio: { url: data.result.download }, mimetype: 'audio/mpeg', fileName: `${data.result.title}.mp3` }, { quoted: m })
+            }
+
+            if (body.startsWith('@fb')) {
+                const url = body.slice(4)
+                if (!url) return await conn.sendMessage(from, { text: 'Please provide a Facebook video link!' })
+                const res = await fetch(`https://api.vreden.my.id/api/fbdown?url=${url}`)
+                const data = await res.json()
+                await conn.sendMessage(from, { video: { url: data.result.normal }, caption: 'Facebook video downloaded!' }, { quoted: m })
+            }
+
+            if (body.startsWith('@tta')) {
+                const text = body.slice(5)
+                if (!text) return await conn.sendMessage(from, { text: 'What should I turn into audio?' })
+                const url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=en&client=tw-ob`
+                await conn.sendMessage(from, { audio: { url: url }, mimetype: 'audio/mpeg', fileName: 'audio.mp3' }, { quoted: m })
+                    }
+
+            
 
             if (body.startsWith('@advice')) {
                 const adv = advice[Math.floor(Math.random() * advice.length)]
