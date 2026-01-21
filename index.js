@@ -248,6 +248,17 @@ if (body.startsWith('@menu')) {
                 }, { quoted: m })
             }
 
+            if (body.startsWith('@marry')) {
+                let user = m.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0] || m.message.extendedTextMessage?.contextInfo?.participant
+                if (!user) return await conn.sendMessage(from, { text: 'You need to tag someone or reply to their message to marry them!' })
+                await conn.sendMessage(from, { 
+                    video: { url: './BOTMEDIAS/marry.gif' }, 
+                    gifPlayback: true, 
+                    caption: `*CONGRATULATIONS* you've married 🥂 @${user.split('@')[0]}`,
+                    mentions: [user] 
+                }, { quoted: m })
+            }
+
             if (body.startsWith('@hug')) {
                 let user = m.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0] || m.message.extendedTextMessage?.contextInfo?.participant
                 if (!user) return await conn.sendMessage(from, { text: 'You need to tag someone or reply to their message to hug them!' })
