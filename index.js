@@ -713,6 +713,81 @@ if (body.startsWith('@withdraw')) {
     fs.writeFileSync('./economyData.json', JSON.stringify(db, null, 2))
             }
 
+
+            if (body.startsWith('@slots')) {
+    const args = body.split(' ')
+    const bet = parseInt(args[1])
+    const userId = sender
+    let currentBalance = db[userId].balance || 0
+
+    if (isNaN(bet) || bet <= 0) {
+        return await conn.sendMessage(from, { text: "❌ Usage: *@slots <amount>*\nExample: *@slots 1000*" }, { quoted: m })
+    }
+
+    if (bet > currentBalance) {
+        return await conn.sendMessage(from, { text: `❌ You don't have enough! Your balance is ${currentBalance.toLocaleString()} 🪙.` }, { quoted: m })
+    }
+
+    const emojis = ["🍎", "💎", "🍋", "🍒", "🔔", "⭐"]
+    const a = emojis[Math.floor(Math.random() * emojis.length)]
+    const b = emojis[Math.floor(Math.random() * emojis.length)]
+    const c = emojis[Math.floor(Math.random() * emojis.length)]
+
+    let status = ""
+    let winAmount = 0
+
+    if (a === b && b === c) {
+        winAmount = bet * 10
+        db[userId].balance += winAmount
+        status = `🎊 *JACKPOT!* 🎊\nYOU WON ${winAmount.toLocaleString()} 🪙!`
+    } else if (a === b || b === c || a === c) {
+        winAmount = bet * 2
+        db[userId].balance += winAmount
+        status = `✨ *BIG WIN!* ✨\nYOU WON ${winAmount.toLocaleString()} 🪙!`
+    } else {
+        db[userId].balance -= bet
+        status = `💀 *YOU LOST* 💀\nLost ${bet.toLocaleString()} 🪙.`
+    }
+
+    const slotMachine = `
+🎰 *SLOTS* 🎰
+──────────
+  [ ${a} | ${b} | ${c} ]
+──────────
+${status}
+
+Wallet: ${db[userId].balance.toLocaleString()} 🪙`
+
+    await conn.sendMessage(from, { text: slotMachine }, { quoted: m })
+    fs.writeFileSync('./economyData.json', JSON.stringify(db, null, 2))
+            }
+
+            if (body.startsWith('@coinflip')) {
+    const args = body.split(' ')
+    const choice = args[1]?.toLowerCase()
+    const bet = parseInt(args[2])
+    const userId = sender
+    let currentBalance = db[userId].balance || 0
+
+    if (!choice || !['heads', 'tails'].includes(choice) || isNaN(bet) || bet <= 0) {
+        return await conn.sendMessage(from, { text: "❌ Usage: *@coinflip <heads/tails> <amount>*\nExample: *@coinflip heads 500*" }, { quoted: m })
+    }
+
+    if (bet > currentBalance) {
+        return await conn.sendMessage(from, { text: `❌ You don't have enough! Your balance is ${currentBalance.toLocaleString()} 🪙.` }, { quoted: m })
+    }
+
+    const result = Math.random() < 0.5 ? 'heads' : 'tails'
+    
+    if (choice === result) {
+        db[userId].balance += bet
+        await conn.sendMessage(from, { text: `🪙 *COINFLIP* 🪙\n\nThe coin landed on... *${result.toUpperCase()}*!\n\n✨ You won ${bet.toLocaleString()} 🪙!\nNew Balance: ${db[userId].balance.toLocaleString()} 🪙` }, { quoted: m })
+    } else {
+        db[userId].balance -= bet
+        await conn.sendMessage(from, { text: `🪙 *COINFLIP* 🪙\n\nThe coin landed on... *${result.toUpperCase()}*!\n\n💀 You lost ${bet.toLocaleString()} 🪙.\nRemaining Balance: ${db[userId].balance.toLocaleString()} 🪙` }, { quoted: m })
+    }
+    fs.writeFileSync('./economyData.json', JSON.stringify(db, null, 2))
+}
             
             if (body.startsWith('@lb')) {
                 let board = Object.keys(db)
