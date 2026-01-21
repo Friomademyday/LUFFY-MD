@@ -118,16 +118,17 @@ if (from.endsWith('@g.us') && !gdb[from]) {
     fs.writeFileSync('./groupData.json', JSON.stringify(gdb, null, 2))
 }
 
-if (from.endsWith('@g.us') && gdb[from] && gdb[from].antilink && body.includes('chat.whatsapp.com')) {
-    const groupMetadata = await conn.groupMetadata(from)
-    const isBotAdmin = groupMetadata.participants.find(p => p.id === botNumber)?.admin
-    const isSenderAdmin = groupMetadata.participants.find(p => p.id === sender)?.admin
-
-    if (!body.includes(from.split('@')[0]) && isBotAdmin && !isSenderAdmin && !isCreator) {
+const groupMetadata = from.endsWith('@g.us') ? await conn.groupMetadata(from) : ''
+const groupAdmins = from.endsWith('@g.us') ? groupMetadata.participants.filter(v => v.admin !== null).map(v => v.id) : []
+const isBotAdmin = groupAdmins.includes(botNumber)
+const isAdmins = groupAdmins.includes(sender)
+            
+    if (from.endsWith('@g.us') && gdb[from] && gdb[from].antilink && body.includes('chat.whatsapp.com')) {
+    if (!body.includes(from.split('@')[0]) && isBotAdmin && !isAdmins && !isCreator) {
         await conn.sendMessage(from, { delete: m.key })
         await conn.sendMessage(from, { text: `🚫 Links are not allowed here!` })
     }
-}
+    }
 
             const jokes = [
     "I told my wife she was drawing her eyebrows too high. She looked surprised.",
@@ -258,18 +259,25 @@ if (body.startsWith('@menu')) {
                 await conn.sendMessage(from, { text: '"Him": https://github.com/Friomademyday/' }, { quoted: m })
             }
 
-            if (body.startsWith('@mute') || body.startsWith('@unmute')) {
-    const groupMetadata = await conn.groupMetadata(from)
-    const isBotAdmin = groupMetadata.participants.find(p => p.id === botNumber)?.admin
-    const isSenderAdmin = groupMetadata.participants.find(p => p.id === sender)?.admin
+            if (body.startsWith('@mute')) {
+    if (!isBotAdmin) return await conn.sendMessage(from, { text: '❌ I need to be an admin to mute the group!' }, { quoted: m })
+    if (!isAdmins && !isCreator) return await conn.sendMessage(from, { text: '❌ This is an admin-only command!' }, { quoted: m })
 
-    if (!isBotAdmin) return await conn.sendMessage(from, { text: 'I need to be an admin first.' })
-    if (!isSenderAdmin && !isCreator) return
+    await conn.groupSettingUpdate(from, 'announcement')
+    gdb[from].mute = true
+    fs.writeFileSync('./groupData.json', JSON.stringify(gdb, null, 2))
+    await conn.sendMessage(from, { text: '🔇 Group has been muted. Only admins can send messages.' })
+}
 
-    const setting = body.startsWith('@mute') ? 'announcement' : 'not_announcement'
-    await conn.groupSettingUpdate(from, setting)
-    await conn.sendMessage(from, { text: body.startsWith('@mute') ? '🔒 Group Muted.' : '🔓 Group Unmuted.' })
-            }
+if (body.startsWith('@unmute')) {
+    if (!isBotAdmin) return await conn.sendMessage(from, { text: '❌ I need to be an admin to unmute!' }, { quoted: m })
+    if (!isAdmins && !isCreator) return await conn.sendMessage(from, { text: '❌ Admin only!' }, { quoted: m })
+
+    await conn.groupSettingUpdate(from, 'not_announcement')
+    gdb[from].mute = false
+    fs.writeFileSync('./groupData.json', JSON.stringify(gdb, null, 2))
+    await conn.sendMessage(from, { text: '🔊 Group has been unmuted. Everyone can chat now.' })
+}
 
             if (body.startsWith('@ship')) {
                 let users = m.message.extendedTextMessage?.contextInfo?.mentionedJid || []
@@ -539,40 +547,43 @@ if (body.startsWith('@jackpot')) {
                 await conn.sendMessage(from, { text: 'Pong! 🏓 THE-FRiO-BOT is active.' }, { quoted: m })
             }
 
-            if (body.startsWith('@antilink')) {
-                const groupMetadata = await conn.groupMetadata(from)
-                const isSenderAdmin = groupMetadata.participants.find(p => p.id === sender)?.admin
-                if (!isSenderAdmin && !isCreator) return
-                
-                if (body.includes('off')) {
-                    gdb[from].antilink = false
-                    await conn.sendMessage(from, { text: '✅ Anti-link has been turned OFF.' })
-                } else {
-                    gdb[from].antilink = true
-                    await conn.sendMessage(from, { text: '✅ Anti-link has been turned ON.' })
-                }
-                fs.writeFileSync('./groupData.json', JSON.stringify(gdb, null, 2))
-            }
+            if (body.startsWith('@antilinkon')) {
+    if (!isAdmins && !isCreator) return await conn.sendMessage(from, { text: '❌ Admin only!' }, { quoted: m })
+    
+    gdb[from].antilink = true
+    fs.writeFileSync('./groupData.json', JSON.stringify(gdb, null, 2))
+    await conn.sendMessage(from, { text: '✅ Anti-Link is now ENABLED. I will delete all WhatsApp group links.' })
+}
 
-          if (body.startsWith('@promote') || body.startsWith('@demote')) {
-    const groupMetadata = await conn.groupMetadata(from)
-    const participants = groupMetadata.participants
-    const isBotAdmin = participants.find(p => p.id === botNumber)?.admin
-    const isSenderAdmin = participants.find(p => p.id === sender)?.admin
-    const action = body.startsWith('@promote') ? "promote" : "demote"
+if (body.startsWith('@antilinkoff')) {
+    if (!isAdmins && !isCreator) return await conn.sendMessage(from, { text: '❌ Admin only!' }, { quoted: m })
+    
+    gdb[from].antilink = false
+    fs.writeFileSync('./groupData.json', JSON.stringify(gdb, null, 2))
+    await conn.sendMessage(from, { text: '❌ Anti-Link is now DISABLED.' })
+}
 
-    if (!isBotAdmin) return await conn.sendMessage(from, { text: 'I need admin powers to do this.' })
-    if (!isSenderAdmin && !isCreator) return
+          if (body.startsWith('@promote')) {
+    if (!isBotAdmin) return await conn.sendMessage(from, { text: '❌ I need to be an admin to promote people!' }, { quoted: m })
+    if (!isAdmins && !isCreator) return await conn.sendMessage(from, { text: '❌ Only admins can use this command!' }, { quoted: m })
 
-    let users = m.message.extendedTextMessage?.contextInfo?.mentionedJid || []
-    if (m.message.extendedTextMessage?.contextInfo?.quotedMessage) {
-        users.push(m.message.extendedTextMessage.contextInfo.participant)
-    }
-    if (users.length === 0) return await conn.sendMessage(from, { text: 'Tag or reply to someone!' })
+    let user = m.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0]
+    if (!user) return await conn.sendMessage(from, { text: 'Tag the person you want to promote!' }, { quoted: m })
 
-    await conn.groupParticipantsUpdate(from, users, action)
-    await conn.sendMessage(from, { text: `✅ User(s) ${action}d.` })
-          }
+    await conn.groupParticipantsUpdate(from, [user], "promote")
+    await conn.sendMessage(from, { text: `✅ @${user.split('@')[0]} is now an Admin!`, mentions: [user] })
+}
+
+if (body.startsWith('@demote')) {
+    if (!isBotAdmin) return await conn.sendMessage(from, { text: '❌ I need to be an admin to demote people!' }, { quoted: m })
+    if (!isAdmins && !isCreator) return await conn.sendMessage(from, { text: '❌ Only admins can use this command!' }, { quoted: m })
+
+    let user = m.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0]
+    if (!user) return await conn.sendMessage(from, { text: 'Tag the person you want to demote!' }, { quoted: m })
+
+    await conn.groupParticipantsUpdate(from, [user], "demote")
+    await conn.sendMessage(from, { text: `❌ @${user.split('@')[0]} has been demoted to Member.`, mentions: [user] })
+}
 
             if (body.startsWith('@daily')) {
     const today = new Date().toISOString().split('T')[0]
@@ -889,6 +900,17 @@ Wallet: ${db[userId].balance.toLocaleString()} 🪙`
         caption: text, 
         mentions: [sender] 
     }, { quoted: m })
+            }
+
+            if (body.startsWith('@kick')) {
+    if (!isBotAdmin) return await conn.sendMessage(from, { text: '❌ I need to be an admin to kick people!' }, { quoted: m })
+    if (!isAdmins && !isCreator) return await conn.sendMessage(from, { text: '❌ Only admins can use this command!' }, { quoted: m })
+
+    let victim = m.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0]
+    if (!victim) return await conn.sendMessage(from, { text: 'Tag the person you want to kick!' }, { quoted: m })
+
+    await conn.groupParticipantsUpdate(from, [victim], "remove")
+    await conn.sendMessage(from, { text: `👢 @${victim.split('@')[0]} has been kicked from the group.`, mentions: [victim] })
             }
             
             if (body.startsWith('@hidetag')) {
