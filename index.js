@@ -566,7 +566,71 @@ if (body.startsWith('@jackpot')) {
     await conn.sendMessage(from, { text: `✅ User(s) ${action}d.` })
           }
 
-            
+            if (body.startsWith('@daily')) {
+    const today = new Date().toISOString().split('T')[0]
+    if (db[sender].lastClaim === today) {
+        await conn.sendMessage(from, { text: "You have already claimed your daily 1000 🪙 coins today. Come back tomorrow!" }, { quoted: m })
+    } else {
+        db[sender].balance = (db[sender].balance || 0) + 1000
+        db[sender].lastClaim = today
+        fs.writeFileSync('./economyData.json', JSON.stringify(db, null, 2))
+        await conn.sendMessage(from, { text: `You have claimed 1000 🪙 coins. Your new balance is ${db[sender].balance.toLocaleString()} 🪙.` }, { quoted: m })
+    }
+}
+
+if (body.startsWith('@claim')) {
+    const today = new Date().toISOString().split('T')[0]
+    if (db[sender].lastClaimExtra === today) {
+        return await conn.sendMessage(from, { text: "You already used your lucky claim today!" }, { quoted: m })
+    }
+
+    let amount = 0
+    let chance = Math.random() * 100
+
+    if (chance < 0.5) {
+        amount = Math.floor(Math.random() * 2000) + 8001
+    } else if (chance < 2) {
+        amount = Math.floor(Math.random() * 3000) + 5001
+    } else if (chance < 10) {
+        amount = Math.floor(Math.random() * 3000) + 2001
+    } else {
+        amount = Math.floor(Math.random() * 2000)
+    }
+
+    db[sender].balance = (db[sender].balance || 0) + amount
+    db[sender].lastClaimExtra = today
+    fs.writeFileSync('./economyData.json', JSON.stringify(db, null, 2))
+    
+    let msg = `✨ You claimed your lucky bonus and got ${amount.toLocaleString()} 🪙 coins!`
+    if (amount > 5000) msg = `🔥 INSANE LUCK! You claimed ${amount.toLocaleString()} 🪙 coins!`
+    
+    await conn.sendMessage(from, { text: msg }, { quoted: m })
+}
+
+if (body.startsWith('@balance')) {
+    let user = m.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0] || m.message.extendedTextMessage?.contextInfo?.participant || sender
+    let bal = db[user]?.balance || 0
+    let bnk = db[user]?.bank || 0
+    await conn.sendMessage(from, { text: `💰 *Wallet:* ${bal.toLocaleString()} 🪙\n🏦 *Bank:* ${bnk.toLocaleString()} 🪙\nTotal: ${(bal + bnk).toLocaleString()} 🪙` }, { quoted: m })
+}
+
+
+
+if (body.startsWith('@give')) {
+    let user = m.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0] || m.message.extendedTextMessage?.contextInfo?.participant
+    const args = body.split(' ')
+    let amount = parseInt(args[args.length - 1])
+
+    if (!user || isNaN(amount) || amount <= 0) return await conn.sendMessage(from, { text: 'Tag someone and specify a valid amount! Example: @give @user 500' })
+    if (db[sender].balance < amount) return await conn.sendMessage(from, { text: 'You do not have enough coins in your wallet!' })
+    
+    if (!db[user]) db[user] = { balance: 0, bank: 0, lastClaim: '', msccount: 0, rank: 'NOOB', bonusesClaimed: [] }
+    
+    db[sender].balance -= amount
+    db[user].balance = (db[user].balance || 0) + amount
+    fs.writeFileSync('./economyData.json', JSON.stringify(db, null, 2))
+    await conn.sendMessage(from, { text: `✅ You gave ${amount.toLocaleString()} 🪙 coins to @${user.split('@')[0]}`, mentions: [user] }, { quoted: m })
+                                  }
             
            
 
