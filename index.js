@@ -251,25 +251,7 @@ if (body.startsWith('@menu')) {
                 await conn.sendMessage(from, { text: '"Him": https://github.com/Friomademyday/' }, { quoted: m })
             }
 
-            if (body.startsWith('@mute')) {
-    if (!isBotAdmin) return await conn.sendMessage(from, { text: '❌ I need to be an admin to mute the group!' }, { quoted: m })
-    if (!isAdmins && !isCreator) return await conn.sendMessage(from, { text: '❌ This is an admin-only command!' }, { quoted: m })
-
-    await conn.groupSettingUpdate(from, 'announcement')
-    gdb[from].mute = true
-    fs.writeFileSync('./groupData.json', JSON.stringify(gdb, null, 2))
-    await conn.sendMessage(from, { text: '🔇 Group has been muted. Only admins can send messages.' })
-}
-
-if (body.startsWith('@unmute')) {
-    if (!isBotAdmin) return await conn.sendMessage(from, { text: '❌ I need to be an admin to unmute!' }, { quoted: m })
-    if (!isAdmins && !isCreator) return await conn.sendMessage(from, { text: '❌ Admin only!' }, { quoted: m })
-
-    await conn.groupSettingUpdate(from, 'not_announcement')
-    gdb[from].mute = false
-    fs.writeFileSync('./groupData.json', JSON.stringify(gdb, null, 2))
-    await conn.sendMessage(from, { text: '🔊 Group has been unmuted. Everyone can chat now.' })
-}
+            
 
             if (body.startsWith('@ship')) {
                 let users = m.message.extendedTextMessage?.contextInfo?.mentionedJid || []
