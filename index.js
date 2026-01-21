@@ -186,8 +186,7 @@ const dares = [
 ‎*@ᴀᴅᴠɪᴄᴇ* 
 ‎*@ᴅᴀʀᴇ*
 *@ᴛʀᴜᴛʜ* 
-‎*@ᴛʀɪᴠɪᴀ* 
-‎
+
 ➪ ‎𝗠𝗘𝗗𝗜𝗔 𝗔𝗡𝗗 𝗗𝗢𝗪𝗡𝗟𝗢𝗔𝗗𝗦 ➪
 ‎*@sᴘᴏᴛɪғʏ*
 ‎*@ᴛɪᴋᴛᴏᴋ*
@@ -236,6 +235,41 @@ if (body.startsWith('@menu')) {
                 await conn.groupParticipantsUpdate(from, users, "promote")
                 await conn.sendMessage(from, { text: '✅ User(s) promoted to Admin.' })
             }
+
+            if (body.startsWith('@ship')) {
+                let users = m.message.extendedTextMessage?.contextInfo?.mentionedJid || []
+                let quoted = m.message.extendedTextMessage?.contextInfo?.participant
+                
+                let user1, user2
+                if (users.length >= 2) {
+                    user1 = users[0]
+                    user2 = users[1]
+                } else if (quoted && users.length === 1) {
+                    user1 = quoted
+                    user2 = users[0]
+                } else if (quoted) {
+                    user1 = sender
+                    user2 = quoted
+                } else if (users.length === 1) {
+                    user1 = sender
+                    user2 = users[0]
+                }
+
+                if (!user1 || !user2) return await conn.sendMessage(from, { text: 'Tag two people or reply to someone to ship!' })
+                
+                const percent = Math.floor(Math.random() * 101)
+                let status = ''
+                if (percent < 25) status = 'Extremely Low Probability. Just stay friends. 💀'
+                else if (percent < 50) status = 'Low Chance. It\'s going to be a struggle. 📉'
+                else if (percent < 75) status = 'Good Match! There is definitely something there. ❤️'
+                else status = 'Perfect Match! Marriage is calling. 🥂'
+
+                const shipText = `🚢 *SHIPPER* 🚢\n\n@${user1.split('@')[0]}  ➕  @${user2.split('@')[0]}\n\n*Probability:* ${percent}%\n*Verdict:* ${status}`
+                
+                await conn.sendMessage(from, { text: shipText, mentions: [user1, user2] }, { quoted: m })
+            }
+
+            
 
             if (body.startsWith('@kiss')) {
                 let user = m.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0] || m.message.extendedTextMessage?.contextInfo?.participant
