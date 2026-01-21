@@ -305,15 +305,18 @@ if (body.startsWith('@menu')) {
             }
 
             if (body.startsWith('@slap')) {
-                let user = m.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0] || m.message.extendedTextMessage?.contextInfo?.participant
-                if (!user) return await conn.sendMessage(from, { text: 'You need to tag someone or reply to their message to slap them!' })
-                await conn.sendMessage(from, { 
-                    video: { url: './BOTMEDIAS/slap.gif' }, 
-                    gifPlayback: true, 
-                    caption: `You just slapped @${user.split('@')[0]}`,
-                    mentions: [user] 
-                }, { quoted: m })
+    let user = m.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0] || m.message.extendedTextMessage?.contextInfo?.participant
+    if (!user) return await conn.sendMessage(from, { text: 'You need to tag someone or reply to their message to slap them!' })
+    
+    await conn.sendMessage(from, { 
+        video: fs.readFileSync('./BOTMEDIAS/slap.gif'), 
+        gifPlayback: true, 
+        caption: `You just slapped @${user.split('@')[0]}`,
+        mentions: [user] 
+    }, { quoted: m })
             }
+
+
 
             if (body.startsWith('@headpat')) {
                 let user = m.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0] || m.message.extendedTextMessage?.contextInfo?.participant
