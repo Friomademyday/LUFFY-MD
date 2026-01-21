@@ -3,6 +3,7 @@ const {
     useMultiFileAuthState, 
     DisconnectReason,
     fetchLatestBaileysVersion
+    downloadMediaMessage 
 } = require("@whiskeysockets/baileys")
 const pino = require("pino")
 const { Boom } = require("@hapi/boom")
