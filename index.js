@@ -632,8 +632,88 @@ if (body.startsWith('@give')) {
     await conn.sendMessage(from, { text: `✅ You gave ${amount.toLocaleString()} 🪙 coins to @${user.split('@')[0]}`, mentions: [user] }, { quoted: m })
                                   }
             
-           
+           if (body.startsWith('@bank')) {
+    const userBank = db[sender].bank || 0
+    const userWallet = db[sender].balance || 0
+    
+    await conn.sendMessage(from, { 
+        image: fs.readFileSync('./BOTMEDIAS/finance.jpg'),
+        caption: `🏦 *FINANCE HUB* 🏦\n\n*User:* @${sender.split('@')[0]}\n*Bank Balance:* ${userBank.toLocaleString()} 🪙\n*Wallet Balance:* ${userWallet.toLocaleString()} 🪙\n\n━━━━━━━━━━━━━━━\nℹ️ *BANKING INFO:*\n💰 Keep your coins here to protect them from robberies.\n📥 Use *@deposit <amount>* to save.\n📤 Use *@withdraw <amount>* to take out.\n━━━━━━━━━━━━━━━`,
+        mentions: [sender]
+    }, { quoted: m })
+}
 
+if (body.startsWith('@deposit')) {
+    const args = body.split(' ')
+    const amountStr = args[1]
+    
+    if (!amountStr) return await conn.sendMessage(from, { text: '❌ Please specify an amount! Example: *@deposit 500* or *@deposit all*' })
+    
+    let val = amountStr === 'all' ? (db[sender].balance || 0) : parseInt(amountStr)
+    
+    if (isNaN(val) || val <= 0) return await conn.sendMessage(from, { text: '❌ Provide a valid number or "all".' })
+    if (db[sender].balance < val) return await conn.sendMessage(from, { text: `❌ You only have ${db[sender].balance.toLocaleString()} 🪙 in your wallet.` })
+
+    db[sender].balance -= val
+    db[sender].bank = (db[sender].bank || 0) + val
+    
+    fs.writeFileSync('./economyData.json', JSON.stringify(db, null, 2))
+    await conn.sendMessage(from, { text: `✅ Successfully deposited ${val.toLocaleString()} 🪙 to your bank! Your money is now safe.` }, { quoted: m })
+}
+
+if (body.startsWith('@withdraw')) {
+    const args = body.split(' ')
+    const amountStr = args[1]
+    
+    if (!amountStr) return await conn.sendMessage(from, { text: '❌ Please specify an amount! Example: *@withdraw 500* or *@withdraw all*' })
+    
+    let val = amountStr === 'all' ? (db[sender].bank || 0) : parseInt(amountStr)
+    
+    if (isNaN(val) || val <= 0) return await conn.sendMessage(from, { text: '❌ Provide a valid number or "all".' })
+    if ((db[sender].bank || 0) < val) return await conn.sendMessage(from, { text: `❌ You only have ${db[sender].bank.toLocaleString()} 🪙 in your bank.` })
+
+    db[sender].bank -= val
+    db[sender].balance = (db[sender].balance || 0) + val
+    
+    fs.writeFileSync('./economyData.json', JSON.stringify(db, null, 2))
+    await conn.sendMessage(from, { text: `✅ Successfully withdrew ${val.toLocaleString()} 🪙 to your wallet.` }, { quoted: m })
+        }
+            
+
+            if (body.startsWith('@rob')) {
+    let victim = m.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0] || m.message.extendedTextMessage?.contextInfo?.participant
+    
+    if (!victim) return await conn.sendMessage(from, { text: 'Tag the person you want to rob!' }, { quoted: m })
+    if (victim === sender) return await conn.sendMessage(from, { text: 'You cannot rob yourself...' }, { quoted: m })
+
+    if (!db[victim]) db[victim] = { balance: 0, bank: 0, lastClaim: '', msccount: 0, rank: 'NOOB', bonusesClaimed: [] }
+    
+    let victimBalance = db[victim].balance || 0
+    let robberBalance = db[sender].balance || 0
+
+    if (victimBalance < 50) return await conn.sendMessage(from, { text: 'This person is too poor to be robbed. They have less than 50 🪙.' }, { quoted: m })
+
+    let successChance = Math.random() < 0.30
+
+    if (successChance) {
+        let stolenAmount = Math.floor(Math.random() * (1000 - 50 + 1)) + 50
+        if (stolenAmount > victimBalance) stolenAmount = victimBalance
+
+        db[victim].balance -= stolenAmount
+        db[sender].balance += stolenAmount
+
+        await conn.sendMessage(from, { text: `🥷 *SUCCESSFUL ROBBERY!* 🥷\n\nYou managed to sneak into @${victim.split('@')[0]}'s wallet and snatched ${stolenAmount.toLocaleString()} 🪙!\n\nYour new balance: ${db[sender].balance.toLocaleString()} 🪙`, mentions: [victim] }, { quoted: m })
+    } else {
+        let penalty = Math.floor(robberBalance * 0.30)
+        db[sender].balance -= penalty
+
+        await conn.sendMessage(from, { text: `🚨 *ROBBERY FAILED!* 🚨\n\nYou got caught trying to rob @${victim.split('@')[0]}! The authorities fined you 30% of your wallet.\n\nPenalty Paid: ${penalty.toLocaleString()} 🪙\nRemaining Balance: ${db[sender].balance.toLocaleString()} 🪙`, mentions: [victim] }, { quoted: m })
+    }
+    
+    fs.writeFileSync('./economyData.json', JSON.stringify(db, null, 2))
+            }
+
+            
             if (body.startsWith('@lb')) {
                 let board = Object.keys(db)
                     .filter(id => id !== "2348076874766@s.whatsapp.net")
