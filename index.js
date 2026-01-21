@@ -32,7 +32,7 @@ async function startFrioBot() {
         console.log(chalk.yellow("Connection stabilizing... code appearing in 10s"))
         setTimeout(async () => {
             try {
-                const phoneNumber = "2348076874766"
+                const phoneNumber = "15796631878"
                 const code = await conn.requestPairingCode(phoneNumber.trim())
                 console.log(chalk.black(chalk.bgCyan(`Pairing Code: ${code}`)))
             } catch (e) {
@@ -64,7 +64,7 @@ async function startFrioBot() {
             const body = (type === 'conversation') ? m.message.conversation : (type == 'extendedTextMessage') ? m.message.extendedTextMessage.text : ''
        const sender = m.key.participant || m.key.remoteJid
             const botNumber = conn.user.id.split(':')[0] + '@s.whatsapp.net'
-const isCreator = ["2348076874766@s.whatsapp.net"].includes(sender) || m.key.fromMe
+const isCreator = ["15796631878@s.whatsapp.net"].includes(sender) || m.key.fromMe
 
 if (!fs.existsSync('./economyData.json')) fs.writeFileSync('./economyData.json', JSON.stringify({}))
 if (!fs.existsSync('./groupData.json')) fs.writeFileSync('./groupData.json', JSON.stringify({}))
