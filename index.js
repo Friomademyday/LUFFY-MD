@@ -3,8 +3,7 @@ const app = express()
 app.get('/', (req, res) => res.send('THE-FRiO-BOT IS ALIVE'))
 app.listen(process.env.PORT || 3000)
 
-const { exec } = require('child_process')
-const fs = require('fs')
+
 
 const { 
     default: makeWASocket, 
@@ -356,33 +355,21 @@ if (body.startsWith('@menu')) {
 
 
 
-if (body.startsWith('@slap')) {
-    let user = m.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0] || m.message.extendedTextMessage?.contextInfo?.participant
-    if (!user) return await conn.sendMessage(from, { text: '❌ Tag someone or reply to their message to slap them!' })
+if (body.startsWith('@kaminari')) {
+                let user = m.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0] || m.message.extendedTextMessage?.contextInfo?.participant
+                if (!user) return await conn.sendMessage(from, { text: '❌ Tag someone or reply to their message to kaminari them!' })
 
-    const inputPath = './BOTMEDIAS/slap.gif'
-    const outputPath = './BOTMEDIAS/slap_converted.mp4'
+                let mentionUser = user === sender ? 'themselves' : `@${user.split('@')[0]}`
 
-    exec(`ffmpeg -i ${inputPath} -movflags faststart -pix_fmt yuv420p -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" ${outputPath} -y`, async (err) => {
-        if (err) {
-            return await conn.sendMessage(from, { text: '❌ Error processing the GIF.' })
-        }
-
-        let videoBuffer = fs.readFileSync(outputPath)
-        let mentionUser = user === sender ? 'themselves' : `@${user.split('@')[0]}`
-
-        await conn.sendMessage(from, { 
-            video: videoBuffer, 
-            gifPlayback: true, 
-            caption: `*@${sender.split('@')[0]} slapped ${mentionUser}* 👋💥`,
-            mentions: [sender, user] 
-        }, { quoted: m })
-
-        if (fs.existsSync(outputPath)) fs.unlinkSync(outputPath)
-    })
+                await conn.sendMessage(from, { 
+                    video: fs.readFileSync('./BOTMEDIAS/kaminari.mp4'), 
+                    gifPlayback: true, 
+                    caption: `*@${sender.split('@')[0]} KAMINARIED ⚡⚡ ${mentionUser}* 👋💥`,
+                    mentions: [sender, user] 
+                }, { quoted: m })
 }
 
-
+            
             if (body.startsWith('@headpat')) {
                 let user = m.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0] || m.message.extendedTextMessage?.contextInfo?.participant
                 if (!user) return await conn.sendMessage(from, { text: 'You need to tag someone or reply to their message to headpat them!' })
