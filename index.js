@@ -178,25 +178,7 @@ const flirts = [
     "If I could rearrange the alphabet, I’d put 'U' and 'I' together."
 ]
 
-const truths = [
-    "What is the most embarrassing thing in your search history?",
-    "Who in this group would you want to be stranded on an island with?",
-    "What’s a secret you’ve never told anyone in this chat?",
-    "Have you ever ghosted someone?",
-    "What’s the most childish thing you still do?",
-    "If you could trade lives with someone for a day, who would it be?",
-    "What is your biggest deal-breaker in a relationship?"
-]
 
-const dares = [
-    "Send a screenshot of your recent call log.",
-    "Record yourself saying 'I am a little teapot' in a high-pitched voice.",
-    "Text your crush and tell them you like them, then show proof.",
-    "Type your name using only your nose.",
-    "Reveal the last thing you searched for on YouTube.",
-    "Describe the person you like without saying their name.",
-    "Send a photo of the inside of your fridge."
-]
             
             const menuText = `__________________________________
          《 𝗧𝗛𝗘 - 𝗙𝗥𝗶𝗢 - 𝗕𝗢𝗧 》
@@ -522,7 +504,26 @@ if (body.startsWith('@slap')) {
             }
 
 
+if (body.startsWith('@truth')) {
+                const fs = require('fs');
+                // Basically checking the file every time so it gets new updates without restarting the bot, so i can add, swap or remove
+                const data = JSON.parse(fs.readFileSync('./interactions.json', 'utf8'));
+                const randomTruth = data.truths[Math.floor(Math.random() * data.truths.length)];
+                
+                await conn.sendMessage(from, { 
+                    text: `📜 *TRUTH:*\n\n${randomTruth}` 
+                }, { quoted: m });
+            }
 
+            if (body.startsWith('@dare')) {
+                const fs = require('fs');
+                const data = JSON.parse(fs.readFileSync('./interactions.json', 'utf8'));
+                const randomDare = data.dares[Math.floor(Math.random() * data.dares.length)];
+                
+                await conn.sendMessage(from, { 
+                    text: `🎭 *DARE:*\n\n${randomDare}` 
+                }, { quoted: m });
+                    }
 
             
             
