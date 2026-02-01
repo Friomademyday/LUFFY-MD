@@ -570,39 +570,12 @@ if (body.startsWith('@truth')) {
 
 
 
-            if (body.startsWith('@characters')) {
-                const charData = JSON.parse(fs.readFileSync('./characters.json', 'utf8'))
-                
-                const toMono = (text) => {
-                    const map = {
-                        'a': '𝙰', 'b': '𝚋', 'c': '𝚌', 'd': '𝚍', 'e': '𝚎', 'f': '𝚏', 'g': '𝚐', 'h': '𝚑', 'i': '𝚒', 'j': '𝚓', 'k': '𝚔', 'l': '𝚕', 'm': '𝚖', 'n': '𝚗', 'o': '𝚘', 'p': '𝚙', 'q': '𝚚', 'r': '𝚛', 's': '𝚜', 't': '𝚝', 'u': '𝚞', 'v': '𝚟', 'w': '𝚠', 'x': '𝚡', 'y': '𝚢', 'z': '𝚣',
-                        'A': '𝙰', 'B': '𝙱', 'C': '𝙲', 'D': '𝙳', 'E': '𝙴', 'F': '𝙵', 'G': '𝙶', 'H': '𝙷', 'I': '𝙸', 'J': '𝙹', 'K': '𝙺', 'L': '𝙻', 'M': '𝙼', 'N': '𝙽', 'O': '𝙾', 'P': '𝙿', 'Q': '𝚀', 'R': '𝚁', 'S': '𝚂', 'T': '𝚃', 'U': '𝚄', 'V': '𝚅', 'W': '𝚆', 'X': '𝚇', 'Y': '𝚈', 'Z': '𝚉',
-                        '0': '𝟶', '1': '𝟷', '2': '𝟸', '3': '𝟹', '4': '𝟺', '5': '𝟻', '6': '𝟼', '7': '𝟽', '8': '𝟾', '9': '𝟿', ',': ',', '.': '.', ':': ':', '-': '-', '[': '[', ']': ']', '@': '@'
-                    }
-                    // Automatically convert to uppercase and then map to mono
-                    return String(text).toUpperCase().split('').map(c => map[c] || c).join('')
-                }
-
-                let charMsg = `👑 *${toMono("𝙿𝙰𝙽𝚃𝙷𝙴𝙾𝙽 𝙻𝙴𝙶𝙴𝙽𝙳𝚂")}*\n`
-                charMsg += `----------------------------------\n\n`
-                
-                charData.heroes.forEach(c => {
-                    charMsg += `👤 *${toMono(c.name)}*\n\n`
-                    charMsg += `🔹 ${toMono("𝚁𝙰𝚁𝙸𝚃𝚈")}: ${toMono(c.rarity)}\n\n`
-                    charMsg += `⚡ ${toMono("𝚂𝙺𝙸𝙻𝙻")}: ${toMono(c.skill)}\n\n`
-                    charMsg += `📝 ${toMono(c.description)}\n\n`
-                    charMsg += `💰 ${toMono("𝙿𝚁𝙸𝙲𝙴")}: ${toMono(c.price.toLocaleString())} 🪙\n\n`
-                    charMsg += `🆔 ${toMono("𝙸𝙳")}: ${toMono(c.id)}\n\n`
-                    charMsg += `----------------------------------\n\n`
-                })
-                
-                charMsg += `\n*${toMono("𝚄𝚂𝙴 @𝙱𝚄𝚈𝙲𝙷𝙰𝚁 [𝙸𝙳] 𝚃𝙾 𝚁𝙴𝙲𝚁𝚄𝙸𝚃")}*`
-
+if (body.startsWith('@characters')) {
                 await conn.sendMessage(from, { 
-                    image: fs.readFileSync('./BOTMEDIAS/characters.jpg'), 
-                    caption: charMsg 
+                    image: { url: './BOTMEDIAS/characters.jpg' }, 
+                    caption: charText 
                 }, { quoted: m })
-                            }
+                    }
 
             
             
