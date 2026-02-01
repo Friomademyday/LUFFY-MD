@@ -97,6 +97,7 @@ if (!db[sender]) {
     }
     fs.writeFileSync('./economyData.json', JSON.stringify(db, null, 2))
 }
+            if (!db[sender].inventory) db[sender].inventory = { characters: [], items: [] };
 
        db[sender].msccount += 1
 fs.writeFileSync('./economyData.json', JSON.stringify(db, null, 2))
