@@ -565,27 +565,41 @@ if (body.startsWith('@truth')) {
                 }, { quoted: m });
                     }
 
-            
+
             if (body.startsWith('@characters')) {
                 const charData = JSON.parse(fs.readFileSync('./characters.json', 'utf8'))
-                let charMsg = `👑 *FRIO BOT CHARACTERS*\n__________________________________\n\n`
+                
+                const toMono = (text) => {
+                    const map = {
+                        'a': '𝚊', 'b': '𝚋', 'c': '𝚌', 'd': '𝚍', 'e': '𝚎', 'f': '𝚏', 'g': '𝚐', 'h': '𝚑', 'i': '𝚒', 'j': '𝚓', 'k': '𝚔', 'l': '𝚕', 'm': '𝚖', 'n': '𝚗', 'o': '𝚘', 'p': '𝚙', 'q': '𝚚', 'r': '𝚛', 's': '𝚜', 't': '𝚝', 'u': '𝚞', 'v': '𝚟', 'w': '𝚠', 'x': '𝚡', 'y': '𝚢', 'z': '𝚣',
+                        'A': '𝙰', 'B': '𝙱', 'C': '𝙲', 'D': '𝙳', 'E': '𝙴', 'F': '𝙵', 'G': '𝙶', 'H': '𝙷', 'I': '𝙸', 'J': '𝙹', 'K': '𝙺', 'L': '𝙻', 'M': '𝙼', 'N': '𝙽', 'O': '𝙾', 'P': '𝙿', 'Q': '𝚀', 'R': '𝚁', 'S': '𝚂', 'T': '𝚃', 'U': '𝚄', 'V': '𝚅', 'W': '𝚆', 'X': '𝚇', 'Y': '𝚈', 'Z': '𝚉',
+                        '0': '𝟶', '1': '𝟷', '2': '𝟸', '3': '𝟹', '4': '𝟺', '5': '𝟻', '6': '𝟼', '7': '𝟽', '8': '𝟾', '9': '𝟿', ',': ',', '.': '.', ':': ':'
+                    }
+                    return String(text).split('').map(c => map[c] || c).join('')
+                }
+
+                let charMsg = `👑 *${toMono("𝙿𝙰𝙽𝚃𝙷𝙴𝙾𝙽 𝙻𝙴𝙶𝙴𝙽𝙳𝚂")}*\n`
+                charMsg += `----------------------------------\n\n`
                 
                 charData.heroes.forEach(c => {
-                    charMsg += `👤 *${c.name}*\n`
-                    charMsg += `🔹 Rarity: ${c.rarity}\n`
-                    charMsg += `⚡ Skill: ${c.skill}\n`
-                    charMsg += `📝 ${c.description}\n`
-                    charMsg += `💰 Price: ${c.price.toLocaleString()}\n`
-                    charMsg += `🆔 ID: ${c.id}\n\n`
+                    charMsg += `👤 *${toMono(c.name.toUpperCase())}*\n`
+                    charMsg += `🔹 ${toMono("𝚁𝚊𝚛𝚒𝚝𝚢")}: ${toMono(c.rarity)}\n`
+                    charMsg += `⚡ ${toMono("𝚂𝚔𝚒𝚕𝚕")}: ${toMono(c.skill)}\n`
+                    charMsg += `📝 ${toMono(c.description)}\n`
+                    charMsg += `💰 ${toMono("𝙿𝚛𝚒𝚌𝚎")}: ${toMono(c.price.toLocaleString())}\n`
+                    charMsg += `🆔 ${toMono("𝙸𝙳")}: ${toMono(c.id)}\n`
+                    charMsg += `----------------------------------\n`
                 })
                 
-                charMsg += `__________________________________\n*Use @buychar [ID] to purchase*`
+                charMsg += `\n*${toMono("𝚄𝚜𝚎 @𝚋𝚞𝚢𝚌𝚑𝚊𝚛 [𝙸𝙳] 𝚝𝚘 𝚛𝚎𝚌𝚛𝚞𝚒𝚝")}*`
 
                 await conn.sendMessage(from, { 
                     image: fs.readFileSync('./BOTMEDIAS/characters.jpg'), 
                     caption: charMsg 
                 }, { quoted: m })
             }
+
+            
 
             if (body.startsWith('@buychar')) {
                 const charId = body.slice(9).trim()
