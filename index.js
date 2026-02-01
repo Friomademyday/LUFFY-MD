@@ -89,7 +89,11 @@ if (!db[sender]) {
         msccount: 0, 
         rank: 'NOOB', 
         bonusesClaimed: [],
-        hasClaimedFirst: false 
+        hasClaimedFirst: false,
+        inventory: {        // This was the missing piece!
+            characters: [], 
+            items: [] 
+        } 
     }
     fs.writeFileSync('./economyData.json', JSON.stringify(db, null, 2))
 }
