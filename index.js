@@ -88,7 +88,8 @@ if (!db[sender]) {
         lastClaimExtra: '', 
         msccount: 0, 
         rank: 'NOOB', 
-        bonusesClaimed: [] 
+        bonusesClaimed: [],
+        hasClaimedFirst: false 
     }
     fs.writeFileSync('./economyData.json', JSON.stringify(db, null, 2))
 }
@@ -260,7 +261,35 @@ if (body.startsWith('@menu')) {
                 await conn.sendMessage(from, { text: shipText, mentions: [user1, user2] }, { quoted: m })
             }
 
-            
+            if (body.startsWith('@firstclaim')) {
+                const userId = sender
+                
+                // Check if they already claimed it
+                if (db[userId].hasClaimedFirst) {
+                    return reply("❌ You have already claimed your starter bonus! Greed won't get you far in the Pantheon.")
+                }
+
+                // Generate random value between 250,000 and 1,000,000
+                let starterBonus = Math.floor(Math.random() * (1000000 - 250000 + 1)) + 250000
+                
+                // Update Database
+                db[userId].balance += starterBonus
+                db[userId].hasClaimedFirst = true
+                fs.writeFileSync('./economyData.json', JSON.stringify(db, null, 2))
+
+                // Font helper for the amount
+                const toMono = (t) => t.split('').map(c => ({'0':'𝟶','1':'𝟷','2':'𝟸','3':'𝟹','4':'𝟺','5':'𝟻','6':'𝟼','7':'𝟽','8':'𝟾','9':'𝟿',',':','})[c] || c).join('')
+
+                let welcomeMsg = `🎊 *WELCOME TO THE PANTHEON* 🎊\n\n`
+                welcomeMsg += `You've successfully claimed your one-time starter bonus!\n\n`
+                welcomeMsg += `💰 *Starter Gift:* **${toMono(starterBonus.toLocaleString())}** 🪙\n\n`
+                welcomeMsg += `*Use this wealth wisely. The streets of Frio Bot are cold.*`
+
+                await conn.sendMessage(from, { 
+                    image: fs.readFileSync('./BOTMEDIAS/welcome.jpg'), 
+                    caption: welcomeMsg 
+                }, { quoted: m })
+            }
 
           
 
