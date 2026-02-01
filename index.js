@@ -945,42 +945,100 @@ if (body.startsWith('@withdraw')) {
         }
             
 
-            if (body.startsWith('@rob')) {
-    let victim = m.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0] || m.message.extendedTextMessage?.contextInfo?.participant
-    
-    if (!victim) return await conn.sendMessage(from, { text: 'Tag the person you want to rob!' }, { quoted: m })
-    if (victim === sender) return await conn.sendMessage(from, { text: 'You cannot rob yourself...' }, { quoted: m })
-
-    if (!db[victim]) db[victim] = { balance: 0, bank: 0, lastClaim: '', msccount: 0, rank: 'NOOB', bonusesClaimed: [] }
-    
-    let victimBalance = db[victim].balance || 0
-    let robberBalance = db[sender].balance || 0
-                
-    if (robberBalance < 100) {
-        return await conn.sendMessage(from, { text: `❌ You're too broke to be a criminal! You need at least 100 🪙 in your wallet to plan a robbery.` }, { quoted: m })
-    }
-    if (victimBalance < 50) return await conn.sendMessage(from, { text: 'This person is too poor to be robbed. They have less than 50 🪙.' }, { quoted: m })
-
-    let successChance = Math.random() < 0.30
-
-    if (successChance) {
-        let stolenAmount = Math.floor(Math.random() * (1000 - 50 + 1)) + 50
-        if (stolenAmount > victimBalance) stolenAmount = victimBalance
-
-        db[victim].balance -= stolenAmount
-        db[sender].balance += stolenAmount
-
-        await conn.sendMessage(from, { text: `🥷 *SUCCESSFUL ROBBERY!* 🥷\n\nYou managed to sneak into @${victim.split('@')[0]}'s wallet and snatched ${stolenAmount.toLocaleString()} 🪙!\n\nYour new balance: ${db[sender].balance.toLocaleString()} 🪙`, mentions: [victim] }, { quoted: m })
-    } else {
-        let penalty = Math.floor(robberBalance * 0.30)
-        db[sender].balance -= penalty
-
-        await conn.sendMessage(from, { text: `🚨 *ROBBERY FAILED!* 🚨\n\nYou got caught trying to rob @${victim.split('@')[0]}! The authorities fined you 30% of your wallet.\n\nPenalty Paid: ${penalty.toLocaleString()} 🪙\nRemaining Balance: ${db[sender].balance.toLocaleString()} 🪙`, mentions: [victim] }, { quoted: m })
-    }
-    
-    fs.writeFileSync('./economyData.json', JSON.stringify(db, null, 2))
+            if (body.startsWith('@manofsteelon')) {
+                if (!db[sender].inventory.characters.includes('hero_002')) return reply("❌ You don't own Superman!")
+                db[sender].skills.supermanActive = true
+                await conn.sendMessage(from, { image: fs.readFileSync('./BOTMEDIAS/manofsteel.jpg'), caption: `🛡️ *MAN OF STEEL ON*\n\nYou are now unrobbable. Only Kryptonite can touch you now.` }, { quoted: m })
+                fs.writeFileSync('./economyData.json', JSON.stringify(db, null, 2))
             }
 
+            if (body.startsWith('@manofsteeloff')) {
+                db[sender].skills.supermanActive = false
+                reply("🔓 *MAN OF STEEL OFF*\n\nYour shield is down. Watch your back!")
+                fs.writeFileSync('./economyData.json', JSON.stringify(db, null, 2))
+        }
+
+
+            if (body.startsWith('@illusion')) {
+                if (!db[sender].inventory.characters.includes('hero_005')) return reply("❌ You don't own Loki!")
+                const lastUsed = db[sender].skills?.lokiLastUsed || 0
+                if (Date.now() - lastUsed < 86400000) return reply("❌ Loki needs to rest. Cooldown active!")
+
+                db[sender].skills.lokiActiveUntil = Date.now() + 60000
+                db[sender].skills.lokiLastUsed = Date.now()
+                
+                await conn.sendMessage(from, { image: fs.readFileSync('./BOTMEDIAS/illusion.jpg'), caption: `🃏 *Mischief Managed!*\n\nLoki's illusion is active for 60 seconds. Your next robbery will be a deception!` }, { quoted: m })
+                fs.writeFileSync('./economyData.json', JSON.stringify(db, null, 2))
+            }
+            
+
+if (body.startsWith('@rob')) {
+                let victim = m.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0] || m.message.extendedTextMessage?.contextInfo?.participant
+                if (!victim) return reply('Tag the person you want to rob!')
+                if (victim === sender) return reply('You cannot rob yourself...')
+
+                let victimBalance = db[victim].balance || 0
+                let robberBalance = db[sender].balance || 0
+                const hasKryptonite = db[sender].inventory.items?.includes('kryptonite')
+                const isLokiActive = db[sender].skills?.lokiActiveUntil && Date.now() < db[sender].skills.lokiActiveUntil
+                const isSupermanActive = db[victim].skills?.supermanActive
+
+                if (robberBalance < 100) return reply(`❌ Too broke to rob!`)
+                if (victimBalance < 50) return reply('This person is too poor.')
+
+                // --- SUPERMAN CHECK ---
+                if (isSupermanActive && !hasKryptonite) {
+                    return await conn.sendMessage(from, { text: `🛡️ *ROBBERY BLOCKED!*\n\n@${victim.split('@')[0]} is protected by **Superman**. You need Kryptonite to break this shield!`, mentions: [victim] }, { quoted: m })
+                }
+
+                // --- LOKI CHECK ---
+                if (isLokiActive) {
+                    let stolenAmount = Math.floor(victimBalance * 0.80)
+                    db[victim].balance -= stolenAmount
+                    db[sender].balance += stolenAmount
+                    
+                    // The Fake Fail Message
+                    let fakePenalty = Math.floor(robberBalance * 0.30)
+                    await conn.sendMessage(from, { 
+                        image: fs.readFileSync('./BOTMEDIAS/illusion.jpg'),
+                        caption: `🚨 *ROBBERY FAILED!* 🚨\n\nYou got caught trying to rob @${victim.split('@')[0]}! The authorities fined you 30% of your wallet.\n\nPenalty Paid: ${fakePenalty.toLocaleString()} 🪙\n\n*(Psst... Loki tricked them. You actually stole ${stolenAmount.toLocaleString()} 🪙 silently!)*`, 
+                        mentions: [victim] 
+                    }, { quoted: m })
+                    
+                    db[sender].skills.lokiActiveUntil = 0 // End skill after use
+                    fs.writeFileSync('./economyData.json', JSON.stringify(db, null, 2))
+                    return 
+                }
+
+                // --- REGULAR ROB / KRYPTONITE ROB ---
+                let successChance = hasKryptonite ? 1.0 : (Math.random() < 0.30)
+
+                if (successChance) {
+                    let stolenAmount = hasKryptonite ? Math.floor(victimBalance * 0.60) : Math.floor(Math.random() * (1000 - 50 + 1)) + 50
+                    if (stolenAmount > victimBalance) stolenAmount = victimBalance
+
+                    db[victim].balance -= stolenAmount
+                    db[sender].balance += stolenAmount
+                    
+                    if (hasKryptonite) {
+                        // Remove Kryptonite after use
+                        let idx = db[sender].inventory.items.indexOf('kryptonite')
+                        db[sender].inventory.items.splice(idx, 1)
+                        await conn.sendMessage(from, { text: `🟢 *KRYPTONITE SMASH!*\n\nYou broke Superman's shield and looted 60%: ${stolenAmount.toLocaleString()} 🪙!` }, { quoted: m })
+                    } else {
+                        await conn.sendMessage(from, { text: `🥷 *SUCCESSFUL ROBBERY!* 🥷\nYou snatched ${stolenAmount.toLocaleString()} 🪙!`, mentions: [victim] }, { quoted: m })
+                    }
+                } else {
+                    let penalty = Math.floor(robberBalance * 0.30)
+                    db[sender].balance -= penalty
+                    await conn.sendMessage(from, { text: `🚨 *ROBBERY FAILED!* 🚨\n\nYou lost ${penalty.toLocaleString()} 🪙.`, mentions: [victim] }, { quoted: m })
+                }
+                
+                fs.writeFileSync('./economyData.json', JSON.stringify(db, null, 2))
+}
+
+
+            
 
             if (body.startsWith('@slots')) {
     const args = body.split(' ')
