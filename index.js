@@ -784,7 +784,7 @@ if (body.startsWith('@truth')) {
                 db[userId].skills.yumekoLastUsed = Date.now()
 
                 await conn.sendMessage(from, { 
-                    image: fs.readFileSync('./BOTMEDIAS/KAKEGURUII.jpg'), 
+                    image: fs.readFileSync('./BOTMEDIAS/KAKEGURUII.jpeg'), 
                     caption: `🎰 *GAMBLING ADDICTION ACTIVATED!!*\n\nFor the next 4 minutes, Yumeko Jabami has taken over! Your win rate is now **100%** on @gamble.\n\n*“Let’s gamble until we go mad!”*` 
                 }, { quoted: m })
 
