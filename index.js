@@ -788,17 +788,60 @@ if (body.startsWith('@antilinkoff')) {
 
           
 
+            if (body.startsWith('@runbarry')) {
+                const userId = sender
+                
+                if (!db[userId].inventory.characters.includes('hero_003')) {
+                    return reply("❌ You don't own The Flash! Buy him from @characters.")
+                }
+
+                const lastUsed = db[userId].skills?.flashLastUsed || 0
+                const cooldown = 86400000 
+
+                if (Date.now() - lastUsed < cooldown) {
+                    const remaining = cooldown - (Date.now() - lastUsed)
+                    const hours = Math.floor(remaining / 3600000)
+                    const minutes = Math.floor((remaining % 3600000) / 60000)
+                    return reply(`❌ Barry is exhausted! Wait ${hours}h ${minutes}m.`)
+                }
+
+                if (!db[userId].skills) db[userId].skills = {}
+                db[userId].skills.flashActiveUntil = Date.now() + 60000
+                db[userId].skills.flashLastUsed = Date.now()
+
+                await conn.sendMessage(from, { 
+                    image: fs.readFileSync('./BOTMEDIAS/runbarry.jpg'), 
+                    caption: `⚡ *SPEED FORCE ACTIVATED!!*\n\nBarry Allen is breaking the time barrier! For the next 60 seconds, you can spam @daily as much as you want!\n\n*RUN, BARRY, RUN!*` 
+                }, { quoted: m })
+
+                fs.writeFileSync('./economyData.json', JSON.stringify(db, null, 2))
+            }
+
+
+            
             if (body.startsWith('@daily')) {
-    const today = new Date().toISOString().split('T')[0]
-    if (db[sender].lastClaim === today) {
-        await conn.sendMessage(from, { text: "You have already claimed your daily 1000 🪙 coins today. Come back tomorrow!" }, { quoted: m })
-    } else {
-        db[sender].balance = (db[sender].balance || 0) + 1000
-        db[sender].lastClaim = today
-        fs.writeFileSync('./economyData.json', JSON.stringify(db, null, 2))
-        await conn.sendMessage(from, { text: `You have claimed 1000 🪙 coins. Your new balance is ${db[sender].balance.toLocaleString()} 🪙.` }, { quoted: m })
-    }
-}
+                const today = new Date().toISOString().split('T')[0]
+                const userId = sender
+                const isFlashActive = db[userId].skills?.flashActiveUntil && Date.now() < db[userId].skills.flashActiveUntil
+
+                if (db[userId].lastClaim === today && !isFlashActive) {
+                    await conn.sendMessage(from, { text: "You have already claimed your daily 1000 🪙 coins today. Come back tomorrow!" }, { quoted: m })
+                } else {
+                    db[userId].balance = (db[userId].balance || 0) + 1000
+                    
+                    if (!isFlashActive) {
+                        db[userId].lastClaim = today
+                    }
+
+                    fs.writeFileSync('./economyData.json', JSON.stringify(db, null, 2))
+                    
+                    let dailyMsg = `You have claimed 1000 🪙 coins. Your new balance is ${db[userId].balance.toLocaleString()} 🪙.`
+                    if (isFlashActive) dailyMsg = `⚡ *SPEED FORCE CLAIM:* +1000 🪙\nBalance: ${db[userId].balance.toLocaleString()} 🪙`
+
+                    await conn.sendMessage(from, { text: dailyMsg }, { quoted: m })
+                }
+            }
+            
 
 if (body.startsWith('@claim')) {
     const today = new Date().toISOString().split('T')[0]
