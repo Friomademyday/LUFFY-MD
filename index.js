@@ -145,38 +145,6 @@ const isAdmins = groupAdmins.includes(sender)
     }
     }
 
-            const jokes = [
-    "I told my wife she was drawing her eyebrows too high. She looked surprised.",
-    "Parallel lines have so much in common. It’s a shame they’ll never meet.",
-    "My wife told me to stop impersonating a flamingo. I had to put my foot down.",
-    "I failed math so many times at school, I can’t even tell you.",
-    "What’s the best thing about Switzerland? I don’t know, but the flag is a big plus.",
-    "I’m reading a book on anti-gravity. It’s impossible to put down!",
-    "I used to be a baker, but I couldn't make enough dough.",
-    "Why don't skeletons fight each other? They don't have the guts."
-]
-
-const advice = [
-    "Never trust a skinny cook.",
-    "If you’re the smartest person in the room, you’re in the wrong room.",
-    "Always borrow money from a pessimist. They don’t expect it back.",
-    "The early bird might get the worm, but the second mouse gets the cheese.",
-    "If you want to go fast, go alone. If you want to go far, go together.",
-    "Don't worry about what others think. They don't do it very often.",
-    "A clean house is a sign of a wasted life.",
-    "If you think you are too small to make a difference, try sleeping with a mosquito."
-]
-
-const flirts = [
-    "Is your name Wi-Fi? Because I'm really feeling a connection.",
-    "Do you believe in love at first sight, or should I walk by again?",
-    "If you were a triangle, you'd be acute one.",
-    "I’m not a photographer, but I can definitely picture us together.",
-    "Are you a charger? Because I’m dying without you.",
-    "Do you have a bandage? I scraped my knee falling for you.",
-    "Aside from being sexy, what do you do for a living?",
-    "If I could rearrange the alphabet, I’d put 'U' and 'I' together."
-]
 
 
             
@@ -664,6 +632,90 @@ if (body.startsWith('@gamble')) {
                 fs.writeFileSync('./groupData.json', JSON.stringify(gdb, null, 2))
                         }
 
+
+
+            if (body.startsWith('@heavyrob')) {
+                let victim = m.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0] || m.message.extendedTextMessage?.contextInfo?.participant
+                if (!victim) return reply('Tag the rich target you want to HEAVY ROB!')
+                if (victim === sender) return reply('Greed is a disease... you cannot rob yourself.')
+
+                let robberWallet = db[sender].balance || 0
+                let robberBank = db[sender].bank || 0
+                let robberTotal = robberWallet + robberBank
+
+                let victimWallet = db[victim].balance || 0
+                let victimBank = db[victim].bank || 0
+                let victimTotal = victimWallet + victimBank
+
+                // --- REQUIREMENT CHECKS ---
+                if (robberWallet < 250000) {
+                    return reply(`❌ You need at least 250,000 🪙 in your wallet to fund a Heavy Robbery operation!`)
+                }
+                if (victimTotal < 500000) {
+                    return reply(`❌ This target isn't juicy enough. They need at least 500,000 🪙 (Bank + Wallet) to be worth the risk.`)
+                }
+
+                // --- CHARACTER BLOCK CHECKS ---
+                if (db[victim].skills?.supermanActive) {
+                    return reply(`🛡️ *HEAVY ROBBERY FAILED!*\n\nYou can't carry heavy weapons and Kryptonite at the same time. Superman effortlessly threw your van into space.`)
+                }
+                
+                // Loki Check (Active Skill doesn't help here)
+                const isLokiActive = db[sender].skills?.lokiActiveUntil && Date.now() < db[sender].skills.lokiActiveUntil
+                if (isLokiActive) {
+                    return reply(`❌ Loki's illusions are too delicate for this brute force attack. Deactivate your skill or wait for it to expire!`)
+                }
+
+                // --- THE HEIST LOGIC ---
+                // Low probability: 15% success rate
+                let successChance = Math.random() < 0.15
+
+                if (successChance) {
+                    let stolenAmount = Math.floor(Math.random() * (2000000 - 500000 + 1)) + 500000
+                    if (stolenAmount > victimTotal) stolenAmount = victimTotal
+
+                    // Deduct from victim (Wallet first, then Bank)
+                    if (stolenAmount <= victimWallet) {
+                        db[victim].balance -= stolenAmount
+                    } else {
+                        let remaining = stolenAmount - victimWallet
+                        db[victim].balance = 0
+                        db[victim].bank -= remaining
+                    }
+
+                    db[sender].balance += stolenAmount
+
+                    let successMsg = `💣 *HEAVY ROBBERY SUCCESSFUL!* 💣\n\n`
+                    successMsg += `🔥 You blew the vault open and cleaned out @${victim.split('@')[0]}!\n`
+                    successMsg += `💰 *Loot Snatched:* ${stolenAmount.toLocaleString()} 🪙\n`
+                    successMsg += `🏢 *Note:* You took from their bank and wallet combined!`
+                    
+                    await conn.sendMessage(from, { text: successMsg, mentions: [victim] }, { quoted: m })
+                } else {
+                    // SEVERE PENALTY: 70% of CUMULATIVE balance
+                    let totalPenalty = Math.floor(robberTotal * 0.70)
+                    
+                    // Deduct penalty from sender (Wallet first, then Bank)
+                    if (totalPenalty <= robberWallet) {
+                        db[sender].balance -= totalPenalty
+                    } else {
+                        let remainingPenalty = totalPenalty - robberWallet
+                        db[sender].balance = 0
+                        db[sender].bank -= remainingPenalty
+                    }
+
+                    let failMsg = `🚨 *HEAVY ROBBERY BUSTED!* 🚨\n\n`
+                    failMsg += `🚔 SWAT intercepted the heist! You were charged with high-level grand theft.\n`
+                    failMsg += `💸 *Penalty:* 70% of your entire net worth (${totalPenalty.toLocaleString()} 🪙) has been seized!\n\n`
+                    failMsg += `*The stakes were high, and you lost it all.*`
+
+                    await conn.sendMessage(from, { text: failMsg, mentions: [victim] }, { quoted: m })
+                }
+
+                fs.writeFileSync('./economyData.json', JSON.stringify(db, null, 2))
+            }
+
+            
 
 if (body.startsWith('@jackpot')) {
     const currentJackpot = gdb[from]?.jackpot || 0
