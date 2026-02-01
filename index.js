@@ -610,11 +610,42 @@ if (body.startsWith('@jackpot')) {
                 await conn.sendMessage(from, { text: '📦 *THE-FRiO-BOT REPO:*\n\nhttps://github.com/Friomademyday/THE-FRIO-BOT-MD-/' }, { quoted: m })
             }
 
-            
+      if (body.startsWith('@joke')) {
+                try {
+                    const res = await axios.get('https://v2.jokeapi.dev/joke/Any?type=single')
+                    const joke = res.data.joke || `${res.data.setup} ... ${res.data.delivery}`
+                    await conn.sendMessage(from, { text: `😂 *Joke:* ${joke}` }, { quoted: m })
+                } catch (e) {
+                    const data = JSON.parse(fs.readFileSync('./interactions.json', 'utf8'))
+                    const randomBackup = data.jokeBackups[Math.floor(Math.random() * data.jokeBackups.length)]
+                    await conn.sendMessage(from, { text: `😂 *Joke (Backup):* ${randomBackup}` }, { quoted: m })
+                }
+            }
 
-            if (body.startsWith('@joke')) {
-                const joke = jokes[Math.floor(Math.random() * jokes.length)]
-                await conn.sendMessage(from, { text: joke }, { quoted: m })
+            if (body.startsWith('@advice')) {
+                try {
+                    const res = await axios.get('https://api.adviceslip.com/advice')
+                    await conn.sendMessage(from, { text: `💡 *Advice:* ${res.data.slip.advice}` }, { quoted: m })
+                } catch (e) {
+                    const data = JSON.parse(fs.readFileSync('./interactions.json', 'utf8'))
+                    const randomBackup = data.adviceBackups[Math.floor(Math.random() * data.adviceBackups.length)]
+                    await conn.sendMessage(from, { text: `💡 *Advice (Backup):* ${randomBackup}` }, { quoted: m })
+                }
+            }      
+
+            if (body.startsWith('@flirt')) {
+                let user = m.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0] || m.message.extendedTextMessage?.contextInfo?.participant
+                if (!user) return await conn.sendMessage(from, { text: '❌ Tag someone to flirt with them!' })
+
+                const data = JSON.parse(fs.readFileSync('./interactions.json', 'utf8'))
+                const randomFlirt = data.flirts[Math.floor(Math.random() * data.flirts.length)]
+                
+                let mentionUser = user === sender ? 'themselves' : `@${user.split('@')[0]}`
+
+                await conn.sendMessage(from, { 
+                    text: `💘 *@${sender.split('@')[0]} to ${mentionUser}:*\n\n"${randomFlirt}"`,
+                    mentions: [sender, user]
+                }, { quoted: m })
             }
 
             
@@ -638,25 +669,10 @@ if (body.startsWith('@jackpot')) {
 
             
 
-            if (body.startsWith('@advice')) {
-                const adv = advice[Math.floor(Math.random() * advice.length)]
-                await conn.sendMessage(from, { text: adv }, { quoted: m })
-            }
 
-            if (body.startsWith('@flirt')) {
-                const flirt = flirts[Math.floor(Math.random() * flirts.length)]
-                await conn.sendMessage(from, { text: flirt }, { quoted: m })
-            }
+            
 
-            if (body.startsWith('@truth')) {
-                const truth = truths[Math.floor(Math.random() * truths.length)]
-                await conn.sendMessage(from, { text: `🧐 *Truth:* ${truth}` }, { quoted: m })
-            }
-
-            if (body.startsWith('@dare')) {
-                const dare = dares[Math.floor(Math.random() * dares.length)]
-                await conn.sendMessage(from, { text: `😈 *Dare:* ${dare}` }, { quoted: m })
-            }
+            
             
             if (body.startsWith('@ping')) {
                 await conn.sendMessage(from, { text: 'Pong! 🏓 THE-FRiO-BOT is active.' }, { quoted: m })
