@@ -569,64 +569,94 @@ if (body.startsWith('@truth')) {
                     }
 
 
+
             if (body.startsWith('@characters')) {
                 const charData = JSON.parse(fs.readFileSync('./characters.json', 'utf8'))
                 
                 const toMono = (text) => {
                     const map = {
-                        'a': '𝚊', 'b': '𝚋', 'c': '𝚌', 'd': '𝚍', 'e': '𝚎', 'f': '𝚏', 'g': '𝚐', 'h': '𝚑', 'i': '𝚒', 'j': '𝚓', 'k': '𝚔', 'l': '𝚕', 'm': '𝚖', 'n': '𝚗', 'o': '𝚘', 'p': '𝚙', 'q': '𝚚', 'r': '𝚛', 's': '𝚜', 't': '𝚝', 'u': '𝚞', 'v': '𝚟', 'w': '𝚠', 'x': '𝚡', 'y': '𝚢', 'z': '𝚣',
+                        'a': '𝙰', 'b': '𝚋', 'c': '𝚌', 'd': '𝚍', 'e': '𝚎', 'f': '𝚏', 'g': '𝚐', 'h': '𝚑', 'i': '𝚒', 'j': '𝚓', 'k': '𝚔', 'l': '𝚕', 'm': '𝚖', 'n': '𝚗', 'o': '𝚘', 'p': '𝚙', 'q': '𝚚', 'r': '𝚛', 's': '𝚜', 't': '𝚝', 'u': '𝚞', 'v': '𝚟', 'w': '𝚠', 'x': '𝚡', 'y': '𝚢', 'z': '𝚣',
                         'A': '𝙰', 'B': '𝙱', 'C': '𝙲', 'D': '𝙳', 'E': '𝙴', 'F': '𝙵', 'G': '𝙶', 'H': '𝙷', 'I': '𝙸', 'J': '𝙹', 'K': '𝙺', 'L': '𝙻', 'M': '𝙼', 'N': '𝙽', 'O': '𝙾', 'P': '𝙿', 'Q': '𝚀', 'R': '𝚁', 'S': '𝚂', 'T': '𝚃', 'U': '𝚄', 'V': '𝚅', 'W': '𝚆', 'X': '𝚇', 'Y': '𝚈', 'Z': '𝚉',
-                        '0': '𝟶', '1': '𝟷', '2': '𝟸', '3': '𝟹', '4': '𝟺', '5': '𝟻', '6': '𝟼', '7': '𝟽', '8': '𝟾', '9': '𝟿', ',': ',', '.': '.', ':': ':'
+                        '0': '𝟶', '1': '𝟷', '2': '𝟸', '3': '𝟹', '4': '𝟺', '5': '𝟻', '6': '𝟼', '7': '𝟽', '8': '𝟾', '9': '𝟿', ',': ',', '.': '.', ':': ':', '-': '-', '[': '[', ']': ']', '@': '@'
                     }
-                    return String(text).split('').map(c => map[c] || c).join('')
+                    // Automatically convert to uppercase and then map to mono
+                    return String(text).toUpperCase().split('').map(c => map[c] || c).join('')
                 }
 
                 let charMsg = `👑 *${toMono("𝙿𝙰𝙽𝚃𝙷𝙴𝙾𝙽 𝙻𝙴𝙶𝙴𝙽𝙳𝚂")}*\n`
                 charMsg += `----------------------------------\n\n`
                 
                 charData.heroes.forEach(c => {
-                    charMsg += `👤 *${toMono(c.name.toUpperCase())}*\n`
-                    charMsg += `🔹 ${toMono("𝚁𝚊𝚛𝚒𝚝𝚢")}: ${toMono(c.rarity)}\n`
-                    charMsg += `⚡ ${toMono("𝚂𝚔𝚒𝚕𝚕")}: ${toMono(c.skill)}\n`
-                    charMsg += `📝 ${toMono(c.description)}\n`
-                    charMsg += `💰 ${toMono("𝙿𝚛𝚒𝚌𝚎")}: ${toMono(c.price.toLocaleString())}\n`
-                    charMsg += `🆔 ${toMono("𝙸𝙳")}: ${toMono(c.id)}\n`
-                    charMsg += `----------------------------------\n`
+                    charMsg += `👤 *${toMono(c.name)}*\n\n`
+                    charMsg += `🔹 ${toMono("𝚁𝙰𝚁𝙸𝚃𝚈")}: ${toMono(c.rarity)}\n\n`
+                    charMsg += `⚡ ${toMono("𝚂𝙺𝙸𝙻𝙻")}: ${toMono(c.skill)}\n\n`
+                    charMsg += `📝 ${toMono(c.description)}\n\n`
+                    charMsg += `💰 ${toMono("𝙿𝚁𝙸𝙲𝙴")}: ${toMono(c.price.toLocaleString())} 🪙\n\n`
+                    charMsg += `🆔 ${toMono("𝙸𝙳")}: ${toMono(c.id)}\n\n`
+                    charMsg += `----------------------------------\n\n`
                 })
                 
-                charMsg += `\n*${toMono("𝚄𝚜𝚎 @𝚋𝚞𝚢𝚌𝚑𝚊𝚛 [𝙸𝙳] 𝚝𝚘 𝚛𝚎𝚌𝚛𝚞𝚒𝚝")}*`
+                charMsg += `\n*${toMono("𝚄𝚂𝙴 @𝙱𝚄𝚈𝙲𝙷𝙰𝚁 [𝙸𝙳] 𝚃𝙾 𝚁𝙴𝙲𝚁𝚄𝙸𝚃")}*`
 
                 await conn.sendMessage(from, { 
                     image: fs.readFileSync('./BOTMEDIAS/characters.jpg'), 
                     caption: charMsg 
                 }, { quoted: m })
-            }
+                            }
 
+            
             
 
             if (body.startsWith('@buychar')) {
-                const charId = body.slice(9).trim()
+                const toMono = (text) => {
+                    const map = {
+                        'a': '𝙰', 'b': '𝚋', 'c': '𝚌', 'd': '𝚍', 'e': '𝚎', 'f': '𝚏', 'g': '𝚐', 'h': '𝚑', 'i': '𝚒', 'j': '𝚓', 'k': '𝚔', 'l': '𝚕', 'm': '𝚖', 'n': '𝚗', 'o': '𝚘', 'p': '𝚙', 'q': '𝚚', 'r': '𝚛', 's': '𝚜', 't': '𝚝', 'u': '𝚞', 'v': '𝚟', 'w': '𝚠', 'x': '𝚡', 'y': '𝚢', 'z': '𝚣',
+                        'A': '𝙰', 'B': '𝙱', 'C': '𝙲', 'D': '𝙳', 'E': '𝙴', 'F': '𝙵', 'G': '𝙶', 'H': '𝙷', 'I': '𝙸', 'J': '𝙹', 'K': '𝙺', 'L': '𝙻', 'M': '𝙼', 'N': '𝙽', 'O': '𝙾', 'P': '𝙿', 'Q': '𝚀', 'R': '𝚁', 'S': '𝚂', 'T': '𝚃', 'U': '𝚄', 'V': '𝚅', 'W': '𝚆', 'X': '𝚇', 'Y': '𝚈', 'Z': '𝚉',
+                        '0': '𝟶', '1': '𝟷', '2': '𝟸', '3': '𝟹', '4': '𝟺', '5': '𝟻', '6': '𝟼', '7': '𝟽', '8': '𝟾', '9': '𝟿', ',': ',', '.': '.', ':': ':'
+                    }
+                    return String(text).toUpperCase().split('').map(c => map[c] || c).join('')
+                }
+
+                const charId = body.slice(9).trim().toLowerCase() // Handles hero_001 even if user types HERO_001
                 const charData = JSON.parse(fs.readFileSync('./characters.json', 'utf8'))
                 const character = charData.heroes.find(c => c.id === charId)
 
-                if (!character) return await conn.sendMessage(from, { text: '❌ Invalid Character ID!' })
+                // 1. Check if ID exists
+                if (!character) {
+                    return reply(`❌ ${toMono("𝙸𝙽𝚅𝙰𝙻𝙸𝙳 𝙲𝙷𝙰𝚁𝙰𝙲𝚃𝙴𝚁 𝙸𝙳!")}`)
+                }
 
-                let userBalance = userStats[sender].balance
-                let userInventory = userStats[sender].inventory.characters || []
+                // 2. Reference the correct DB path (Fixing the userStats crash)
+                let userBalance = db[sender].balance || 0
+                let userInventory = db[sender].inventory.characters || []
 
+                // 3. Ownership Check
                 if (userInventory.includes(charId)) {
-                    return await conn.sendMessage(from, { text: '❌ You already own this character!' })
+                    return reply(`❌ ${toMono("𝚈𝙾𝚄 𝙰𝙻𝚁𝙴𝙰𝙳𝚈 𝙾𝚆𝙽 𝚃𝙷𝙸𝚂 𝙻𝙴𝙶𝙴𝙽𝙳!")}`)
                 }
 
+                // 4. Balance Check
                 if (userBalance < character.price) {
-                    return await conn.sendMessage(from, { text: `❌ You are too broke! You need 💰${(character.price - userBalance).toLocaleString()} more for ${character.name}.` })
+                    let missing = character.price - userBalance
+                    return reply(`❌ ${toMono("𝚃𝙾𝙾 𝙱𝚁𝙾𝙺𝙴!")}\n\n${toMono("𝙽𝙴𝙴𝙳")}: ${toMono(missing.toLocaleString())} 🪙 ${toMono("𝙼𝙾𝚁𝙴")}`)
                 }
 
-                userStats[sender].balance -= character.price
-                userStats[sender].inventory.characters.push(charId)
+                // 5. Deduct and Save
+                db[sender].balance -= character.price
+                db[sender].inventory.characters.push(charId)
+                
+                // Write to file so they don't lose the character on restart
+                fs.writeFileSync('./economyData.json', JSON.stringify(db, null, 2))
 
-                await conn.sendMessage(from, { text: `✅ Congratulations! You have purchased **${character.name}** for 💰${character.price.toLocaleString()}!` }, { quoted: m })
-                                              }
+                let successMsg = `🎊 *${toMono("𝚁𝙴𝙲𝚁𝚄𝙸𝚃𝙼𝙴𝙽𝚃 𝙲𝙾𝙼𝙿𝙻𝙴𝚃𝙴")}* 🎊\n`
+                successMsg += `----------------------------------\n\n`
+                successMsg += `👤 ${toMono("𝙽𝙰𝙼𝙴")}: ${toMono(character.name)}\n\n`
+                successMsg += `💰 ${toMono("𝙿𝚁𝙸𝙲𝙴")}: ${toMono(character.price.toLocaleString())} 🪙\n\n`
+                successMsg += `----------------------------------\n`
+                successMsg += `*${toMono("𝚃𝙷𝙴 𝙿𝙰𝙽𝚃𝙷𝙴𝙾𝙽 𝙶𝚁𝙾𝚆𝚂 𝚂𝚃𝚁𝙾𝙽𝙶𝙴𝚁")}*`
+
+                await conn.sendMessage(from, { text: successMsg }, { quoted: m })
+                        }
 
 
 
