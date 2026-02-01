@@ -1333,4 +1333,27 @@ setInterval(async () => {
     }
 }, 3600000)
 
+setInterval(() => {
+        try {
+            if (!fs.existsSync('./economyData.json')) return
+            let db = JSON.parse(fs.readFileSync('./economyData.json', 'utf8'))
+            let paidUsers = []
+
+            Object.keys(db).forEach(userId => {
+                // Check if they have the skills object and if Batman is ON
+                if (db[userId].skills && db[userId].skills.batmanPassive === 'ON') {
+                    db[userId].balance = (db[userId].balance || 0) + 3000000
+                    paidUsers.push(userId)
+                }
+            })
+
+            if (paidUsers.length > 0) {
+                fs.writeFileSync('./economyData.json', JSON.stringify(db, null, 2))
+                console.log(`[BATMAN] Paid 3,000,000 🪙 to ${paidUsers.length} Wayne Ent. partners.`)
+            }
+        } catch (e) {
+            console.log("Batman Payout Error:", e)
+        }
+    }, 18000000) // 5 Hours
+
 startFrioBot()
