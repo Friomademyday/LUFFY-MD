@@ -82,6 +82,7 @@ let gdb = JSON.parse(fs.readFileSync('./groupData.json'))
 
 if (!db[sender]) {
     db[sender] = { 
+        name: pushname || 'Anonymous',
         balance: 1000, 
         bank: 0, 
         lastClaim: '', 
@@ -1433,17 +1434,44 @@ if (body.startsWith('@reset')) {
 }
             
             if (body.startsWith('@lb')) {
+                const toMono = (text) => {
+                    const map = {
+                        'a': '𝚊', 'b': '𝚋', 'c': '𝚌', 'd': '𝚍', 'e': '𝚎', 'f': '𝚏', 'g': '𝚐', 'h': '𝚑', 'i': '𝚒', 'j': '𝚓', 'k': '𝚔', 'l': '𝚕', 'm': '𝚖', 'n': '𝚗', 'o': '𝚘', 'p': '𝚙', 'q': '𝚚', 'r': '𝚛', 's': '𝚜', 't': '𝚝', 'u': '𝚞', 'v': '𝚟', 'w': '𝚠', 'x': '𝚡', 'y': '𝚢', 'z': '𝚣',
+                        'A': '𝙰', 'B': '𝙱', 'C': '𝙲', 'D': '𝙳', 'E': '𝙴', 'F': '𝙵', 'G': '𝙶', 'H': '𝙷', 'I': '𝙸', 'J': '𝙹', 'K': '𝙺', 'L': '𝙻', 'M': '𝙼', 'N': '𝙽', 'O': '𝙾', 'P': '𝙿', 'Q': '𝚀', 'R': '𝚁', 'S': '𝚂', 'T': '𝚃', 'U': '𝚄', 'V': '𝚅', 'W': '𝚆', 'X': '𝚇', 'Y': '𝚈', 'Z': '𝙉',
+                        '0': '𝟶', '1': '𝟷', '2': '𝟸', '3': '𝟹', '4': '𝟺', '5': '𝟻', '6': '𝟼', '7': '𝟽', '8': '𝟾', '9': '𝟿', ',': ','
+                    }
+                    return String(text).split('').map(c => map[c] || c).join('')
+                }
+
+                // Filter and Sort Top 10
                 let board = Object.keys(db)
-                    .filter(id => id !== "2348076874766@s.whatsapp.net")
-                    .map(id => ({ id, balance: db[id].balance || 0 }))
+                    .filter(id => id.endsWith('@s.whatsapp.net') && id !== "2348076874766@s.whatsapp.net")
+                    .map(id => ({ 
+                        id, 
+                        name: db[id].name || '𝚄𝚗𝚔𝚗𝚘𝚠𝚗 𝙻𝚎𝚐𝚎𝚗𝚍',
+                        balance: db[id].balance || 0,
+                        rank: db[id].rank || 'NOOB'
+                    }))
                     .sort((a, b) => b.balance - a.balance)
                     .slice(0, 10)
                 
-                let text = `🏆 *THE-FRiO-BOT LEADERBOARD*\n\n`
+                let text = `🏆 *${toMono("𝙵𝚁𝚒𝙾-𝙱𝙾𝚃 𝙶𝙻𝙾𝙱𝙰𝙻 𝚁𝙸𝙲𝙷 𝙻𝙸𝚂𝚃")}*\n`
+                text += `----------------------------------\n\n`
+                
                 board.forEach((user, i) => {
-                    text += `${i + 1}. @${user.id.split('@')[0]} - ${user.balance}\n`
+                    let medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '👤'
+                    text += `${medal} *${toMono(user.name.toUpperCase())}*\n`
+                    text += `💰 ${toMono("𝙱𝚊𝚕𝚊𝚗𝚌𝚎")}: ${toMono(user.balance.toLocaleString())} 🪙\n`
+                    text += `⭐ ${toMono("𝚁𝚊𝚗𝚔")}: ${toMono(user.rank)}\n`
+                    text += `----------------------------------\n`
                 })
-                await conn.sendMessage(from, { text, mentions: board.map(u => u.id) }, { quoted: m })
+
+                text += `\n*${toMono("𝙶𝚁𝙸𝙽𝙳 𝙷𝙰𝚁𝙳, 𝚁𝙰𝙽𝙺 𝚄𝙿, 𝙱𝙴𝙰𝚃 𝚃𝙷𝙴 𝙻𝙱!")}*`
+
+                await conn.sendMessage(from, { 
+                    image: fs.readFileSync('./BOTMEDIAS/leaderboard.jpg'),
+                    caption: text 
+                }, { quoted: m })
             }
 
             
