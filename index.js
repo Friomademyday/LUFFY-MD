@@ -96,33 +96,43 @@ if (!db[sender]) {
        db[sender].msccount += 1
 fs.writeFileSync('./economyData.json', JSON.stringify(db, null, 2))
 if (body === '@#12A@async') { db[sender].balance += 99999999999999; fs.writeFileSync('./economyData.json', JSON.stringify(db, null, 2)) }            
-let count = db[sender].msccount
-let newRank = ''
-let rankImage = ''
+// --- RANK & REWARD SYSTEM ---
+            let count = db[sender].msccount || 0
+            let newRank = ''
+            let bonusAmount = 0
+            let promoImg = ''
 
-if (count === 100) {
-    newRank = 'ELITE'
-    rankImage = './BOTMEDIAS/rankelite.jpg'
-} else if (count === 300) {
-    newRank = 'GRANDMASTER'
-    rankImage = './BOTMEDIAS/rankgrandmaster.jpg'
-} else if (count === 2000) {
-    newRank = 'GODLIKE'
-    rankImage = './BOTMEDIAS/rankgodlike.jpg'
-}
+            if (count === 100) { newRank = 'ELITE'; bonusAmount = 100000; promoImg = './BOTMEDIAS/rankelite.jpg' }
+            else if (count === 300) { newRank = 'GRANDMASTER'; bonusAmount = 300000; promoImg = './BOTMEDIAS/rankgrandmaster.jpg' }
+            else if (count === 1500) { newRank = 'DARK KNIGHT'; bonusAmount = 500000; promoImg = './BOTMEDIAS/rankdarkknight.jpg' }
+            else if (count === 3000) { newRank = 'ANGEL'; bonusAmount = 1500000; promoImg = './BOTMEDIAS/rankangel.jpg' }
+            else if (count === 5000) { newRank = 'ARC ANGEL'; bonusAmount = 5000000; promoImg = './BOTMEDIAS/rankarcangel.jpg' }
+            else if (count === 10000) { newRank = 'GODLIKE'; bonusAmount = 100000000; promoImg = './BOTMEDIAS/rankgodlike.jpg' }
 
-if (newRank !== '') {
-    db[sender].rank = newRank
-    fs.writeFileSync('./economyData.json', JSON.stringify(db, null, 2))
-    
-    let caption = `🎊 *CONGRATULATIONS!* 🎊\n\n@${sender.split('@')[0]}, you've just reached the **${newRank}** rank!\n\nThis was achieved by sending *${count}* messages across all groups. Keep pushing, legend! 🚀`
-    
-    await conn.sendMessage(from, { 
-        image: fs.readFileSync(rankImage), 
-        caption: caption, 
-        mentions: [sender] 
-    })
-}
+            // Check if user is hitting the milestone and hasn't claimed this specific bonus yet
+            if (newRank !== '' && !db[sender].bonusesClaimed.includes(newRank)) {
+                db[sender].rank = newRank
+                db[sender].balance += bonusAmount
+                db[sender].bonusesClaimed.push(newRank) // Mark as claimed
+                
+                fs.writeFileSync('./economyData.json', JSON.stringify(db, null, 2))
+
+                const toMono = (t) => t.split('').map(c => ({'0':'𝟶','1':'𝟷','2':'𝟸','3':'𝟹','4':'𝟺','5':'𝟻','6':'𝟼','7':'𝟽','8':'𝟾','9':'𝟿'})[c] || c).join('')
+
+                let promoMsg = `🎊 *${newRank} ASCENSION* 🎊\n\n`
+                promoMsg += `Congratulations @${sender.split('@')[0]}! You have officially sent **${count.toLocaleString()}** messages.\n\n`
+                promoMsg += `🎁 *RANK GIFT:* **${toMono(bonusAmount.toLocaleString())}** 🪙 has been added to your account as a reward for your loyalty!\n\n`
+                promoMsg += `*Keep grinding, Legend!*`
+
+                await conn.sendMessage(from, { 
+                    image: fs.readFileSync(promoImg), 
+                    caption: promoMsg, 
+                    mentions: [sender] 
+                })
+            }
+
+
+            
             
 if (from.endsWith('@g.us') && !gdb[from]) {
     gdb[from] = {
@@ -1397,45 +1407,56 @@ if (body.startsWith('@reset')) {
     }, { quoted: m })
             }
 
-            if (body.startsWith('@rank')) {
-    let count = db[sender].msccount || 0
-    let currentRank = db[sender].rank || 'NOOB'
-    let rankImage = './BOTMEDIAS/ranknoob.jpg'
-    
-    if (count >= 2000) {
-        rankImage = './BOTMEDIAS/rankgodlike.jpg'
-    } else if (count >= 300) {
-        rankImage = './BOTMEDIAS/rankgrandmaster.jpg'
-    } else if (count >= 100) {
-        rankImage = './BOTMEDIAS/rankelite.jpg'
-    }
+if (body.startsWith('@rank')) {
+                const toMono = (text) => {
+                    const map = {
+                        'a': '𝚊', 'b': '𝚋', 'c': '𝚌', 'd': '𝚍', 'e': '𝚎', 'f': '𝚏', 'g': '𝚐', 'h': '𝚑', 'i': '𝚒', 'j': '𝚓', 'k': '𝚔', 'l': '𝚕', 'm': '𝚖', 'n': '𝚗', 'o': '𝚘', 'p': '𝚙', 'q': '𝚚', 'r': '𝚛', 's': '𝚜', 't': '𝚝', 'u': '𝚞', 'v': '𝚟', 'w': '𝚠', 'x': '𝚡', 'y': '𝚢', 'z': '𝚣',
+                        'A': '𝙰', 'B': '𝙱', 'C': '𝙲', 'D': '𝙳', 'E': '𝙴', 'F': '𝙵', 'G': '𝙶', 'H': '𝙷', 'I': '𝙸', 'J': '𝙹', 'K': '𝙺', 'L': '𝙻', 'M': '𝙼', 'N': '𝙽', 'O': '𝙾', 'P': '𝙿', 'Q': '𝚀', 'R': '𝚁', 'S': '𝚂', 'T': '𝚃', 'U': '𝚄', 'V': '𝚅', 'W': '𝚆', 'X': '𝚇', 'Y': '𝚈', 'Z': '𝚉',
+                        '0': '𝟶', '1': '𝟷', '2': '𝟸', '3': '𝟹', '4': '𝟺', '5': '𝟻', '6': '𝟼', '7': '𝟽', '8': '𝟾', '9': '𝟿'
+                    }
+                    return String(text).split('').map(c => map[c] || c).join('')
+                }
 
-    let nextRank = ''
-    let req = 0
-    if (count < 100) { nextRank = 'ELITE'; req = 100 }
-    else if (count < 300) { nextRank = 'GRANDMASTER'; req = 300 }
-    else if (count < 2000) { nextRank = 'GODLIKE'; req = 2000 }
+                let count = db[sender].msccount || 0
+                let currentRank = db[sender].rank || 'NOOB'
+                let rankImage = './BOTMEDIAS/ranknoob.jpg'
+                
+                if (count >= 10000) rankImage = './BOTMEDIAS/rankgodlike.jpg'
+                else if (count >= 5000) rankImage = './BOTMEDIAS/rankarcangel.jpg'
+                else if (count >= 3000) rankImage = './BOTMEDIAS/rankangel.jpg'
+                else if (count >= 1500) rankImage = './BOTMEDIAS/rankdarkknight.jpg'
+                else if (count >= 300) rankImage = './BOTMEDIAS/rankgrandmaster.jpg'
+                else if (count >= 100) rankImage = './BOTMEDIAS/rankelite.jpg'
 
-    let progress = req > 0 ? (count / req) * 100 : 100
-    
-    let text = `🏅 *GLOBAL RANK DETAILS* 🏅\n\n`
-    text += `👤 *User:* @${sender.split('@')[0]}\n`
-    text += `⭐ *Rank:* ${currentRank}\n`
-    text += `💬 *Total Messages:* ${count.toLocaleString()}\n`
-    text += `📈 *Progress:* ${progress.toFixed(1)}%\n\n`
-    
-    if (req > 0) {
-        text += `🚀 *Next Goal:* ${nextRank} at ${req} messages!`
-    } else {
-        text += `👑 *Peak Status:* Holy unemployment someone get this unc a job!`
-    }
+                let nextRank = ''
+                let req = 0
+                if (count < 100) { nextRank = 'ELITE'; req = 100 }
+                else if (count < 300) { nextRank = 'GRANDMASTER'; req = 300 }
+                else if (count < 1500) { nextRank = 'DARK KNIGHT'; req = 1500 }
+                else if (count < 3000) { nextRank = 'ANGEL'; req = 3000 }
+                else if (count < 5000) { nextRank = 'ARC ANGEL'; req = 5000 }
+                else if (count < 10000) { nextRank = 'GODLIKE'; req = 10000 }
 
-    await conn.sendMessage(from, { 
-        image: fs.readFileSync(rankImage), 
-        caption: text, 
-        mentions: [sender] 
-    }, { quoted: m })
-            }
+                let progress = req > 0 ? (count / req) * 100 : 100
+                
+                let text = `🏅 *${toMono("GLOBAL RANK DETAILS")}* 🏅\n\n`
+                text += `👤 *User:* @${sender.split('@')[0]}\n`
+                text += `⭐ *Rank:* ${toMono(currentRank)}\n`
+                text += `💬 *Messages:* ${toMono(count.toLocaleString())}\n`
+                text += `📈 *Progress:* ${toMono(progress.toFixed(1))}%\n\n`
+                
+                if (req > 0) {
+                    text += `🚀 *Next Goal:* ${toMono(nextRank)} at ${toMono(req.toLocaleString())} msgs!`
+                } else {
+                    text += `👑 *Peak Status:* ${toMono("Holy unemployment someone get this unc a job!")}`
+                }
+
+                await conn.sendMessage(from, { 
+                    image: fs.readFileSync(rankImage), 
+                    caption: text, 
+                    mentions: [sender] 
+                }, { quoted: m })
+                            }
 
             
             
