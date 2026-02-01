@@ -1,0 +1,55 @@
+{
+  "heroes": [
+    {
+      "id": "hero_001",
+      "name": "Yumeko Jabami",
+      "rarity": "Divine",
+      "type": "Active",
+      "price": 100000000000000,
+      "skill": "Gambler's High",
+      "description": "100% win rate on @gamble for 4 minutes. (24h Cooldown)",
+      "cooldown": 86400000,
+      "duration": 240000
+    },
+    {
+      "id": "hero_002",
+      "name": "Superman",
+      "rarity": "Legendary",
+      "type": "Passive",
+      "price": 50000000000000,
+      "skill": "Man of Steel",
+      "description": "Unrobbable 24/7 unless Kryptonite is used."
+    },
+    {
+      "id": "hero_003",
+      "name": "The Flash",
+      "rarity": "Legendary",
+      "type": "Active",
+      "price": 25000000000000,
+      "skill": "Speed Force",
+      "description": "Ignore @daily cooldown for 1 minute. (24h Cooldown)",
+      "cooldown": 86400000,
+      "duration": 60000
+    },
+    {
+      "id": "hero_004",
+      "name": "Batman",
+      "rarity": "Legendary",
+      "type": "Passive",
+      "price": 75000000000000,
+      "skill": "Wayne Enterprises",
+      "description": "Passive income of 3,000,000 every 5 hours automatically."
+    },
+    {
+      "id": "hero_005",
+      "name": "Loki",
+      "rarity": "Legendary",
+      "type": "Active",
+      "price": 40000000000000,
+      "skill": "Illusion",
+      "description": "Fakes a rob failure but steals 80% of victim's balance. (24h Cooldown)",
+      "cooldown": 86400000,
+      "duration": 60000
+    }
+  ]
+}
