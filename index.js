@@ -542,6 +542,106 @@ if (body.startsWith('@truth')) {
 
 
 
+
+            if (body.startsWith('@inventory')) {
+                const userId = sender
+                if (!db[userId]) return reply("You don't have an account yet!")
+                
+                const toMono = (text) => {
+                    const map = {
+                        'a': '𝚊', 'b': '𝚋', 'c': '𝚌', 'd': '𝚍', 'e': '𝚎', 'f': '𝚏', 'g': '𝚐', 'h': '𝚑', 'i': '𝚒', 'j': '𝚓', 'k': '𝚔', 'l': '𝚕', 'm': '𝚖', 'n': '𝚗', 'o': '𝚘', 'p': '𝚙', 'q': '𝚚', 'r': '𝚛', 's': '𝚜', 't': '𝚝', 'u': '𝚞', 'v': '𝚟', 'w': '𝚠', 'x': '𝚡', 'y': '𝚢', 'z': '𝚣',
+                        'A': '𝙰', 'B': '𝙱', 'C': '𝙲', 'D': '𝙳', 'E': '𝙴', 'F': '𝙵', 'G': '𝙶', 'H': '𝙷', 'I': '𝙸', 'J': '𝙹', 'K': '𝙺', 'L': '𝙻', 'M': '𝙼', 'N': '𝙽', 'O': '𝙾', 'P': '𝙿', 'Q': '𝚀', 'R': '𝚁', 'S': '𝚂', 'T': '𝚃', 'U': '𝚄', 'V': '𝚅', 'W': '𝚆', 'X': '𝚇', 'Y': '𝚈', 'Z': '𝚉',
+                        '0': '𝟶', '1': '𝟷', '2': '𝟸', '3': '𝟹', '4': '𝟺', '5': '𝟻', '6': '𝟼', '7': '𝟽', '8': '𝟾', '9': '𝟿'
+                    }
+                    return String(text).split('').map(c => map[c] || c).join('')
+                }
+
+                const charData = JSON.parse(fs.readFileSync('./characters.json', 'utf8'))
+                
+                let invMsg = `🎒 ${toMono("𝚄𝚂𝙴𝚁 𝚅𝙰𝚄𝙻𝚃")}: @${userId.split('@')[0]}\n`
+                invMsg += `__________________________________\n\n`
+                
+                invMsg += `💰 ${toMono("𝚆𝙰𝙻𝙻𝙴𝚃")}: ${toMono(db[userId].balance.toLocaleString())} 🪙\n`
+                invMsg += `🏦 ${toMono("𝙱𝙰𝙽𝙺")}: ${toMono(db[userId].bank.toLocaleString())} 🪙\n\n`
+                
+                invMsg += `👑 ${toMono("𝙻𝙴𝙶𝙴𝙽𝙳𝚂 𝚁𝙴𝙲𝚁𝚄𝙸𝚃𝙴𝙳")}:\n`
+                let ownedChars = db[userId].inventory.characters || []
+                if (ownedChars.length === 0) {
+                    invMsg += `*- ${toMono("𝙽𝚘 𝙻𝚎𝚐𝚎𝚗𝚍𝚜 𝚘𝚠𝚗𝚎𝚍 𝚢𝚎𝚝")} -*\n`
+                } else {
+                    ownedChars.forEach(id => {
+                        const char = charData.heroes.find(c => c.id === id)
+                        invMsg += `✅ ${char ? toMono(char.name.toUpperCase()) : toMono(id)}\n`
+                    })
+                }
+
+                invMsg += `\n📦 ${toMono("𝙸𝚃𝙴𝙼𝚂 𝚂𝚃𝙰𝚂𝙷𝙴𝙳")}:\n`
+                let ownedItems = db[userId].inventory.items || []
+                if (ownedItems.length === 0) {
+                    invMsg += `*- ${toMono("𝙽𝚘 𝚒𝚝𝚎𝚖𝚜 𝚒𝚗 𝚜𝚝𝚊𝚜𝚑")} -*\n`
+                } else {
+                    const counts = {}
+                    ownedItems.forEach(x => { counts[x] = (counts[x] || 0) + 1 })
+                    for (const [item, count] of Object.entries(counts)) {
+                        invMsg += `📦 ${toMono(item.toUpperCase())} (𝚡${toMono(count)})\n`
+                    }
+                }
+
+                invMsg += `__________________________________`
+                
+                await conn.sendMessage(from, { text: invMsg, mentions: [userId] }, { quoted: m })
+            }
+
+
+
+            if (body.startsWith('@shop')) {
+                const toMono = (text) => {
+                    const map = {
+                        'a': '𝚊', 'b': '𝚋', 'c': '𝚌', 'd': '𝚍', 'e': '𝚎', 'f': '𝚏', 'g': '𝚐', 'h': '𝚑', 'i': '𝚒', 'j': '𝚓', 'k': '𝚔', 'l': '𝚕', 'm': '𝚖', 'n': '𝚗', 'o': '𝚘', 'p': '𝚙', 'q': '𝚚', 'r': '𝚛', 's': '𝚜', 't': '𝚝', 'u': '𝚞', 'v': '𝚟', 'w': '𝚠', 'x': '𝚡', 'y': '𝚢', 'z': '𝚣',
+                        'A': '𝙰', 'B': '𝙱', 'C': '𝙲', 'D': '𝙳', 'E': '𝙴', 'F': '𝙵', 'G': '𝙶', 'H': '𝙷', 'I': '𝙸', 'J': '𝙹', 'K': '𝙺', 'L': '𝙻', 'M': '𝙼', 'N': '𝙽', 'O': '𝙾', 'P': '𝙿', 'Q': '𝚀', 'R': '𝚁', 'S': '𝚂', 'T': '𝚃', 'U': '𝚄', 'V': '𝚅', 'W': '𝚆', 'X': '𝚇', 'Y': '𝚈', 'Z': '𝚉',
+                        '0': '𝟶', '1': '𝟷', '2': '𝟸', '3': '𝟹', '4': '𝟺', '5': '𝟻', '6': '𝟼', '7': '𝟽', '8': '𝟾', '9': '𝟿'
+                    }
+                    return String(text).split('').map(c => map[c] || c).join('')
+                }
+
+                let shopMsg = `🛒 *${toMono("𝙵𝚁𝙸𝙾 𝙱𝙾𝚃 𝙼𝙰𝚁𝙺𝙴𝚃")}*\n`
+                shopMsg += `__________________________________\n\n`
+                shopMsg += `🟢 *${toMono("𝙺𝚁𝚈𝙿𝚃𝙾𝙽𝙸𝚃𝙴")}*\n`
+                shopMsg += `🔹 ${toMono("𝙴𝙵𝙵𝙴𝙲𝚃")}: Bypasses Superman's shield in @rob.\n`
+                shopMsg += `🔹 ${toMono("𝚁𝙴𝚂𝚃𝚁𝙸𝙲𝚃𝙸𝙾𝙽")}: Cannot be used in @heavyrob.\n`
+                shopMsg += `🔹 ${toMono("𝙿𝚁𝙸𝙲𝙴")}: ${toMono("𝟻𝟶𝟶,𝟶𝟶𝟶")} 🪙\n`
+                shopMsg += `🔹 ${toMono("𝙸𝙳")}: ${toMono("𝚔𝚛𝚢𝚙𝚝𝚘𝚗𝚒𝚝𝚎")}\n\n`
+                shopMsg += `__________________________________\n`
+                shopMsg += `*${toMono("𝚄𝚜𝚎 @𝚋𝚞𝚢𝚒𝚝𝚎𝚖 [𝚒𝚍] 𝚝𝚘 𝚙𝚞𝚛𝚌𝚑𝚊𝚜𝚎")}*`
+
+                await conn.sendMessage(from, { 
+                    image: fs.readFileSync('./BOTMEDIAS/shop.jpg'), 
+                    caption: shopMsg 
+                }, { quoted: m })
+            }
+            
+
+            if (body.startsWith('@buyitem')) {
+                const itemId = body.slice(9).trim().toLowerCase()
+                const userId = sender
+                
+                if (itemId === 'kryptonite') {
+                    const price = 500000
+                    if (db[userId].balance < price) return reply(`❌ 𝚈𝚘𝚞 𝚊𝚛𝚎 𝚝𝚘𝚘 𝚋𝚛𝚘𝚔𝚎 𝚏𝚘𝚛 𝚝𝚑𝚒𝚜 𝚛𝚘𝚌𝚔!`)
+                    
+                    if (!db[userId].inventory.items) db[userId].inventory.items = []
+                    
+                    db[userId].balance -= price
+                    db[userId].inventory.items.push('kryptonite')
+                    
+                    await conn.sendMessage(from, { text: `✅ 𝙿𝚞𝚛𝚌𝚑𝚊𝚜𝚎 𝚂𝚞𝚌𝚌𝚎𝚜𝚜𝚏𝚞𝚕! 𝙺𝚛𝚢𝚙𝚝𝚘𝚗𝚒𝚝𝚎 𝚊𝚍𝚍𝚎𝚍 𝚝𝚘 𝚢𝚘𝚞𝚛 𝚟𝚊𝚞𝚕𝚝.` }, { quoted: m })
+                    fs.writeFileSync('./economyData.json', JSON.stringify(db, null, 2))
+                } else {
+                    reply("❌ 𝙸𝚗𝚟𝚊𝚕𝚒𝚍 𝙸𝚝𝚎𝚖 𝙸𝙳!")
+                }
+            }
+
+
             if (body.startsWith('@kakegurui')) {
                 const charData = JSON.parse(fs.readFileSync('./characters.json', 'utf8'))
                 const userId = sender
