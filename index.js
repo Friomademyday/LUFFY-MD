@@ -744,7 +744,25 @@ if (body.startsWith('@jackpot')) {
 
             
 
-            
+            if (body.startsWith('@wayneenton')) {
+                if (!db[sender].inventory.characters.includes('hero_004')) return reply("❌ You don't own Batman! Visit @characters.")
+                
+                if (!db[sender].skills) db[sender].skills = {}
+                db[sender].skills.batmanPassive = 'ON'
+                
+                await conn.sendMessage(from, { 
+                    image: fs.readFileSync('./BOTMEDIAS/wayneenterprises.jpg'), 
+                    caption: `🦇 *WAYNE ENTERPRISES ACTIVATED*\n\nYou are now receiving 3,000,000 🪙 every 5 hours automatically.` 
+                }, { quoted: m })
+                fs.writeFileSync('./economyData.json', JSON.stringify(db, null, 2))
+            }
+
+            if (body.startsWith('@wayneentoff')) {
+                if (!db[sender].skills) db[sender].skills = {}
+                db[sender].skills.batmanPassive = 'OFF'
+                reply("💼 *WAYNE ENTERPRISES DEACTIVATED*\n\nPassive income stopped.")
+                fs.writeFileSync('./economyData.json', JSON.stringify(db, null, 2))
+        }
 
             
 
