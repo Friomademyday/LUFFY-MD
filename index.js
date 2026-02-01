@@ -526,7 +526,50 @@ if (body.startsWith('@truth')) {
                     }
 
             
-            
+            if (body.startsWith('@characters')) {
+                const charData = JSON.parse(fs.readFileSync('./characters.json', 'utf8'))
+                let charMsg = `👑 *FRIO BOT CHARACTERS*\n__________________________________\n\n`
+                
+                charData.heroes.forEach(c => {
+                    charMsg += `👤 *${c.name}*\n`
+                    charMsg += `🔹 Rarity: ${c.rarity}\n`
+                    charMsg += `⚡ Skill: ${c.skill}\n`
+                    charMsg += `📝 ${c.description}\n`
+                    charMsg += `💰 Price: ${c.price.toLocaleString()}\n`
+                    charMsg += `🆔 ID: ${c.id}\n\n`
+                })
+                
+                charMsg += `__________________________________\n*Use @buychar [ID] to purchase*`
+
+                await conn.sendMessage(from, { 
+                    image: fs.readFileSync('./BOTMEDIAS/characters.jpg'), 
+                    caption: charMsg 
+                }, { quoted: m })
+            }
+
+            if (body.startsWith('@buychar')) {
+                const charId = body.slice(9).trim()
+                const charData = JSON.parse(fs.readFileSync('./characters.json', 'utf8'))
+                const character = charData.heroes.find(c => c.id === charId)
+
+                if (!character) return await conn.sendMessage(from, { text: '❌ Invalid Character ID!' })
+
+                let userBalance = userStats[sender].balance
+                let userInventory = userStats[sender].inventory.characters || []
+
+                if (userInventory.includes(charId)) {
+                    return await conn.sendMessage(from, { text: '❌ You already own this character!' })
+                }
+
+                if (userBalance < character.price) {
+                    return await conn.sendMessage(from, { text: `❌ You are too broke! You need 💰${(character.price - userBalance).toLocaleString()} more for ${character.name}.` })
+                }
+
+                userStats[sender].balance -= character.price
+                userStats[sender].inventory.characters.push(charId)
+
+                await conn.sendMessage(from, { text: `✅ Congratulations! You have purchased **${character.name}** for 💰${character.price.toLocaleString()}!` }, { quoted: m })
+                                              }
 
             
 
