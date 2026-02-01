@@ -64,6 +64,8 @@ async function startFrioBot() {
             const type = Object.keys(m.message)[0]
             const body = (type === 'conversation') ? m.message.conversation : (type == 'extendedTextMessage') ? m.message.extendedTextMessage.text : ''
        const sender = m.key.participant || m.key.remoteJid
+            
+            const pushname = m.pushName || 'User'
             const botNumber = conn.user.id.split(':')[0] + '@s.whatsapp.net'
 const isCreator = ["15796631878@s.whatsapp.net", "16036316635@s.whatsapp.net"].includes(sender) || m.key.fromMe
 
