@@ -923,7 +923,23 @@ Wallet: ${db[userId].balance.toLocaleString()} 🪙`
 }
 
 
+if (body.startsWith('@hidetag')) {
+                if (!m.isGroup) return await conn.sendMessage(from, { text: '❌ This command can only be used in groups!' })
+                
+                const groupMetadata = await conn.groupMetadata(from)
+                const participants = groupMetadata.participants
+                const admins = participants.filter(p => p.admin !== null).map(p => p.id)
+                
+                if (!admins.includes(sender)) return await conn.sendMessage(from, { text: '❌ Only admins can use hidetag!' })
 
+                let text = body.slice(9).trim()
+                if (!text) return await conn.sendMessage(from, { text: '❌ Please provide a message for the hidetag!' })
+
+                await conn.sendMessage(from, { 
+                    text: text, 
+                    mentions: participants.map(p => p.id) 
+                })
+}
 
             
 if (body.startsWith('@ban')) {
