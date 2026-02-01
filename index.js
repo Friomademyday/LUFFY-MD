@@ -571,49 +571,98 @@ if (body.startsWith('@truth')) {
                 await conn.sendMessage(from, { text: `✅ Congratulations! You have purchased **${character.name}** for 💰${character.price.toLocaleString()}!` }, { quoted: m })
                                               }
 
+
+
+
+            if (body.startsWith('@kakegurui')) {
+                const charData = JSON.parse(fs.readFileSync('./characters.json', 'utf8'))
+                const userId = sender
+                
+                if (!db[userId].inventory.characters.includes('hero_001')) {
+                    return reply("❌ You don't own Yumeko Jabami! Buy her first from @characters.")
+                }
+
+                const lastUsed = db[userId].skills?.yumekoLastUsed || 0
+                const cooldown = 86400000 
+
+                if (Date.now() - lastUsed < cooldown) {
+                    const remaining = cooldown - (Date.now() - lastUsed)
+                    const hours = Math.floor(remaining / 3600000)
+                    const minutes = Math.floor((remaining % 3600000) / 60000)
+                    return reply(`❌ Skill on cooldown! Wait ${hours}h ${minutes}m.`)
+                }
+
+                if (!db[userId].skills) db[userId].skills = {}
+                db[userId].skills.yumekoActiveUntil = Date.now() + 240000
+                db[userId].skills.yumekoLastUsed = Date.now()
+
+                await conn.sendMessage(from, { 
+                    image: fs.readFileSync('./BOTMEDIAS/KAKEGURUII.jpg'), 
+                    caption: `🎰 *GAMBLING ADDICTION ACTIVATED!!*\n\nFor the next 4 minutes, Yumeko Jabami has taken over! Your win rate is now **100%** on @gamble.\n\n*“Let’s gamble until we go mad!”*` 
+                }, { quoted: m })
+
+                fs.writeFileSync('./economyData.json', JSON.stringify(db, null, 2))
+            }
+
+
             
 
-            if (body.startsWith('@gamble')) {
-    const args = body.split(' ')
-    const gambleAmount = parseInt(args[1])
-    const userId = sender
-    let currentBalance = db[userId].balance || 0
+if (body.startsWith('@gamble')) {
+                const args = body.split(' ')
+                const gambleAmount = parseInt(args[1])
+                const userId = sender
+                let currentBalance = db[userId].balance || 0
 
-    if (isNaN(gambleAmount) || gambleAmount <= 0) {
-        return reply("Please specify a valid amount to gamble. Example: *@gamble 500*")
-    }
+                if (isNaN(gambleAmount) || gambleAmount <= 0) {
+                    return reply("Please specify a valid amount to gamble. Example: *@gamble 500*")
+                }
 
-    if (gambleAmount > currentBalance) {
-        return reply(`❌ You don't have enough! Your balance is ${currentBalance.toLocaleString()} 🪙.`)
-    }
+                if (gambleAmount > currentBalance) {
+                    return reply(`❌ You don't have enough! Your balance is ${currentBalance.toLocaleString()} 🪙.`)
+                }
 
-    const gambleResult = Math.random() < 0.5 ? "win" : "lose"
-    
-    if (gambleResult === "win") {
-        db[userId].balance += gambleAmount
-        let winMsg = `🎰 *KAKEGURUI!!* ✅\n\n`
-        winMsg += `✨ *Outcome:* YOU WON!\n`
-        winMsg += `💰 *New Balance:* ${db[userId].balance.toLocaleString()} 🪙\n\n`
-        winMsg += `*“Let’s gamble until we go mad!”*`
-        
-        await conn.sendMessage(from, { text: winMsg }, { quoted: m })
-    } else {
-        db[userId].balance -= gambleAmount
-        if (!gdb[from]) gdb[from] = { antilink: false, jackpot: 0 }
-        gdb[from].jackpot = (gdb[from].jackpot || 0) + gambleAmount
-        
-        let loseMsg = `🎰 *KAKEGURUI!!* ❌\n\n`
-        loseMsg += `💀 *Outcome:* YOU LOST!\n`
-        loseMsg += `💸 *Lost:* ${gambleAmount.toLocaleString()} 🪙\n`
-        loseMsg += `🏦 *Note:* Your losses moved to the Group Jackpot.\n\n`
-        loseMsg += `*Lmao you ain't Yumeko Jabami's twin* 😭💔`
-        
-        await conn.sendMessage(from, { text: loseMsg }, { quoted: m })
-    }
-    
-    fs.writeFileSync('./economyData.json', JSON.stringify(db, null, 2))
-    fs.writeFileSync('./groupData.json', JSON.stringify(gdb, null, 2))
-            }
+                let gambleResult
+                const isSkillActive = db[userId].skills?.yumekoActiveUntil && Date.now() < db[userId].skills.yumekoActiveUntil
+
+                if (isSkillActive) {
+                    gambleResult = "win"
+                } else {
+                    gambleResult = Math.random() < 0.5 ? "win" : "lose"
+                }
+                
+                if (gambleResult === "win") {
+                    db[userId].balance += gambleAmount
+                    let winMsg = `🎰 *KAKEGURUI!!* ✅\n\n`
+                    if (isSkillActive) winMsg += `💎 *SKILL ACTIVE:* Yumeko ensured your victory!\n`
+                    winMsg += `✨ *Outcome:* YOU WON!\n`
+                    winMsg += `💰 *New Balance:* ${db[userId].balance.toLocaleString()} 🪙\n\n`
+                    winMsg += `*“Let’s gamble until we go mad!”*`
+                    
+                    if (isSkillActive) {
+                        await conn.sendMessage(from, { 
+                            image: fs.readFileSync('./BOTMEDIAS/KAKEGURUII.jpg'), 
+                            caption: winMsg 
+                        }, { quoted: m })
+                    } else {
+                        await conn.sendMessage(from, { text: winMsg }, { quoted: m })
+                    }
+                } else {
+                    db[userId].balance -= gambleAmount
+                    if (!gdb[from]) gdb[from] = { antilink: false, jackpot: 0 }
+                    gdb[from].jackpot = (gdb[from].jackpot || 0) + gambleAmount
+                    
+                    let loseMsg = `🎰 *KAKEGURUI!!* ❌\n\n`
+                    loseMsg += `💀 *Outcome:* YOU LOST!\n`
+                    loseMsg += `💸 *Lost:* ${gambleAmount.toLocaleString()} 🪙\n`
+                    loseMsg += `🏦 *Note:* Your losses moved to the Group Jackpot.\n\n`
+                    loseMsg += `*Lmao you ain't Yumeko Jabami's twin* 😭💔`
+                    
+                    await conn.sendMessage(from, { text: loseMsg }, { quoted: m })
+                }
+                
+                fs.writeFileSync('./economyData.json', JSON.stringify(db, null, 2))
+                fs.writeFileSync('./groupData.json', JSON.stringify(gdb, null, 2))
+                        }
 
 
 if (body.startsWith('@jackpot')) {
