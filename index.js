@@ -33,7 +33,7 @@ async function startFrioBot() {
         console.log(chalk.yellow("Connection stabilizing... code appearing in 10s"))
         setTimeout(async () => {
             try {
-                const phoneNumber = "15796631878"
+                const phoneNumber = "2348061495215"
                 const code = await conn.requestPairingCode(phoneNumber.trim())
                 console.log(chalk.black(chalk.bgCyan(`Pairing Code: ${code}`)))
             } catch (e) {
@@ -67,7 +67,7 @@ async function startFrioBot() {
             
             const pushname = m.pushName || 'User'
             const botNumber = conn.user.id.split(':')[0] + '@s.whatsapp.net'
-const isCreator = ["15796631878@s.whatsapp.net", "16036316635@s.whatsapp.net"].includes(sender) || m.key.fromMe
+const isCreator = ["2348061495215@s.whatsapp.net", "2348076874766@s.whatsapp.net"].includes(sender) || m.key.fromMe
 
         
 if (!fs.existsSync('./bannedUsers.json')) fs.writeFileSync('./bannedUsers.json', JSON.stringify([]))
@@ -93,7 +93,7 @@ if (!db[sender]) {
         rank: 'NOOB', 
         bonusesClaimed: [],
         hasClaimedFirst: false,
-        inventory: {        // This was the missing piece!
+        inventory: {        
             characters: [], 
             items: [] 
         } 
