@@ -694,6 +694,117 @@ if (body.startsWith('@characters')) {
                     }
 
 
+            if (body.startsWith('@roll')) {
+                const args = body.split(' ')
+                if (args.length < 2) return await conn.sendMessage(from, { text: '❌ Usage: @roll [amount]\nExample: @roll 5000' })
+                
+                let stake = parseInt(args[1])
+                if (isNaN(stake) || stake <= 0) return await conn.sendMessage(from, { text: '❌ Please enter a valid amount to stake!' })
+                
+                if (db[sender].balance < stake) {
+                    return await conn.sendMessage(from, { 
+                        text: `❌ You're too broke for this stake! You only have ${db[sender].balance.toLocaleString()} 🪙. Go beg Nami for some change.` 
+                    }, { quoted: m })
+                }
+
+                let rollResult = Math.floor(Math.random() * 100) + 1
+                
+                if (rollResult <= 14) {
+                    let winnings = stake * 6
+                    db[sender].balance += winnings
+                    fs.writeFileSync('./economyData.json', JSON.stringify(db, null, 2))
+                    
+                    await conn.sendMessage(from, { 
+                        text: `🎲 *THE DICE LANDS ON 6!* 🎲\n\nUnbelievable luck, @${sender.split('@')[0]}! You hit the rare 14% chance!\n\n💰 *Winnings:* ${winnings.toLocaleString()} 🪙\n✨ *New Balance:* ${db[sender].balance.toLocaleString()} 🪙`,
+                        mentions: [sender]
+                    }, { quoted: m })
+                } else {
+                    db[sender].balance -= stake
+                    fs.writeFileSync('./economyData.json', JSON.stringify(db, null, 2))
+                    
+                    await conn.sendMessage(from, { 
+                        text: `🎲 *THE DICE LANDS ON ${Math.floor(Math.random() * 5) + 1}...* 🎲\n\nYou lost, @${sender.split('@')[0]}. The house always wins.\n\n💸 *Loss:* -${stake.toLocaleString()} 🪙\n📉 *Remaining:* ${db[sender].balance.toLocaleString()} 🪙`,
+                        mentions: [sender]
+                    }, { quoted: m })
+                }
+            }
+
+            if (body.startsWith('@roulette')) {
+                const args = body.split(' ')
+                if (args.length < 3) return await conn.sendMessage(from, { text: '❌ Usage: @roulette [red/black] [amount]\nExample: @roulette red 10000' })
+                
+                let choice = args[1].toLowerCase()
+                let stake = parseInt(args[2])
+                
+                if (choice !== 'red' && choice !== 'black') return await conn.sendMessage(from, { text: '❌ You must choose either "red" or "black"!' })
+                if (isNaN(stake) || stake <= 0) return await conn.sendMessage(from, { text: '❌ Please enter a valid amount to stake!' })
+                
+                if (db[sender].balance < stake) {
+                    return await conn.sendMessage(from, { 
+                        text: `❌ You don't have enough coins! Your current wallet: ${db[sender].balance.toLocaleString()} 🪙` 
+                    }, { quoted: m })
+                }
+
+                let outcomeValue = Math.floor(Math.random() * 37)
+                let outcomeColor = ''
+                
+                if (outcomeValue === 0) {
+                    outcomeColor = 'green'
+                } else if (outcomeValue % 2 === 0) {
+                    outcomeColor = 'black'
+                } else {
+                    outcomeColor = 'red'
+                }
+
+                if (choice === outcomeColor) {
+                    let winnings = stake * 2
+                    db[sender].balance += stake
+                    fs.writeFileSync('./economyData.json', JSON.stringify(db, null, 2))
+                    
+                    await conn.sendMessage(from, { 
+                        text: `🎡 *ROULETTE WHEEL SPINS...* 🎡\n\nIt landed on **${outcomeColor.toUpperCase()} ${outcomeValue}**!\n\n✅ *Winner:* @${sender.split('@')[0]}\n💰 *Profit:* ${stake.toLocaleString()} 🪙\n✨ *Total:* ${db[sender].balance.toLocaleString()} 🪙`,
+                        mentions: [sender]
+                    }, { quoted: m })
+                } else {
+                    db[sender].balance -= stake
+                    fs.writeFileSync('./economyData.json', JSON.stringify(db, null, 2))
+                    
+                    await conn.sendMessage(from, { 
+                        text: `🎡 *ROULETTE WHEEL SPINS...* 🎡\n\nIt landed on **${outcomeColor.toUpperCase()} ${outcomeValue}**!\n\n❌ *Loser:* @${sender.split('@')[0]}\n💸 *Loss:* -${stake.toLocaleString()} 🪙\n📉 *Remaining:* ${db[sender].balance.toLocaleString()} 🪙`,
+                        mentions: [sender]
+                    }, { quoted: m })
+                }
+            }
+
+            if (body.startsWith('@beg')) {
+                let chance = Math.floor(Math.random() * 100) + 1
+                
+                if (chance <= 10) {
+                    let reward = Math.floor(Math.random() * (100000 - 60000 + 1)) + 60000
+                    db[sender].balance += reward
+                    fs.writeFileSync('./economyData.json', JSON.stringify(db, null, 2))
+                    
+                    await conn.sendMessage(from, { 
+                        text: `🍊 *NAMI'S MERCY* 🍊\n\nNami is in a surprisingly good mood today! She tosses you a heavy bag of coins.\n\n💰 *You Received:* ${reward.toLocaleString()} 🪙\n✨ *New Balance:* ${db[sender].balance.toLocaleString()} 🪙` 
+                    }, { quoted: m })
+                } else {
+                    const rejections = [
+                        "Nami doesn't feel like giving you coins today. 'Get a job, loser!'",
+                        "Nami ignores you and continues drawing her maps.",
+                        "'Do I look like a charity? Pay me 100,000 first!' Nami laughs at you.",
+                        "Nami hits you over the head for asking for free money. No coins for you.",
+                        "You begged, but Nami is too busy counting her own treasure."
+                    ]
+                    let randomRejection = rejections[Math.floor(Math.random() * rejections.length)]
+                    
+                    await conn.sendMessage(from, { 
+                        text: `🍊 *NAMI SAYS:* \n\n"${randomRejection}"` 
+                    }, { quoted: m })
+                }
+            }
+
+            
+
             if (body.startsWith('@time')) {
                 const time = new Date().toLocaleTimeString('en-US', { hour12: true, hour: '2-digit', minute: '2-digit' })
                 const timeMsg = `⬩ ▬▬▬▬▬▬▬▬▬▬▬▬▬ ⬩\n` +
