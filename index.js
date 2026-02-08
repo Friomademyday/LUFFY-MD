@@ -1679,6 +1679,63 @@ Wallet: ${db[userId].balance.toLocaleString()} 🪙`
 }
 
 
+
+
+
+if (body.startsWith('@insult')) {
+                let user = m.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0] || m.message.extendedTextMessage?.contextInfo?.participant
+                if (!user) return await conn.sendMessage(from, { text: '❌ Tag someone to insult them!' })
+
+                const data = JSON.parse(fs.readFileSync('./interactions.json', 'utf8'))
+                const randomInsult = data.insults[Math.floor(Math.random() * data.insults.length)]
+                
+                let mentionUser = user === sender ? 'themselves' : `@${user.split('@')[0]}`
+
+                await conn.sendMessage(from, { 
+                    text: `💀 *@${sender.split('@')[0]} to ${mentionUser}:*\n\n"${randomInsult}"`,
+                    mentions: [sender, user]
+                }, { quoted: m })
+            }
+
+            if (body.startsWith('@wyr')) {
+                let user = m.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0] || m.message.extendedTextMessage?.contextInfo?.participant
+                if (!user) return await conn.sendMessage(from, { text: '❌ Tag someone to play Would You Rather!' })
+
+                const data = JSON.parse(fs.readFileSync('./interactions.json', 'utf8'))
+                const randomWyr = data.wyr[Math.floor(Math.random() * data.wyr.length)]
+                
+                let mentionUser = user === sender ? 'themselves' : `@${user.split('@')[0]}`
+
+                await conn.sendMessage(from, { 
+                    text: `🎮 *@${sender.split('@')[0]} asks ${mentionUser}:*\n\n"${randomWyr}"`,
+                    mentions: [sender, user]
+                }, { quoted: m })
+            }
+
+            if (body.startsWith('@thought')) {
+                const data = JSON.parse(fs.readFileSync('./interactions.json', 'utf8'))
+                const randomThought = data.thoughts[Math.floor(Math.random() * data.thoughts.length)]
+
+                await conn.sendMessage(from, { 
+                    text: `🧠 *Random Thought:*\n\n"${randomThought}"`
+                }, { quoted: m })
+            }
+
+            if (body.startsWith('@quote')) {
+                const data = JSON.parse(fs.readFileSync('./interactions.json', 'utf8'))
+                const randomQuote = data.quotes[Math.floor(Math.random() * data.quotes.length)]
+
+                await conn.sendMessage(from, { 
+                    text: `📜 *One Piece Quote:*\n\n"${randomQuote}"`
+                }, { quoted: m })
+            }
+
+
+
+
+
+
+
             if (body.startsWith('@8ball')) {
                 const text = body.slice(7).trim()
                 if (!text) return await conn.sendMessage(from, { text: '❌ Ask a question! Example: @8ball will I become king?' }, { quoted: m })
