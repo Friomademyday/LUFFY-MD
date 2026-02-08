@@ -851,6 +851,75 @@ if (body.startsWith('@caps')) {
 
 
 
+if (body.startsWith('@predict')) {
+                let user = m.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0] || m.message.extendedTextMessage?.contextInfo?.participant
+                if (!user) return await conn.sendMessage(from, { text: '❌ Tag someone to predict their future!' })
+
+                const predictions = [
+                    "You will find a hidden treasure in your backyard but it will be a box of old socks.",
+                    "You will become famous for something you did while sleepwalking.",
+                    "A mysterious stranger will offer you a deal you cannot refuse tomorrow.",
+                    "You will accidentally become the leader of a small island nation.",
+                    "Your next meal will be the best thing you have ever tasted in your life.",
+                    "You will win a marathon but only because everyone else took a wrong turn.",
+                    "A bird will drop something valuable near you within the next 48 hours.",
+                    "You will successfully learn a new language in record time.",
+                    "You will meet your double and realize you are the better looking one.",
+                    "A forgotten friend will reach out to you with life-changing news.",
+                    "You will find a twenty dollar bill in a pair of pants you haven't worn in years.",
+                    "You will be invited to a party that changes the course of your career.",
+                    "You will invent something so simple yet so useful the world will thank you.",
+                    "You will break a record that has stood for over fifty years.",
+                    "Your crush will finally notice you but they will be wearing a clown suit.",
+                    "You will travel to a place you have only seen in your dreams.",
+                    "A cat will follow you home and bring you luck for the rest of the year.",
+                    "You will win an argument with a stranger on the internet and feel at peace.",
+                    "You will discover a secret passage in your own house.",
+                    "You will be mistaken for a celebrity and get a free meal out of it.",
+                    "You will wake up tomorrow with a brilliant idea for a movie script.",
+                    "You will save someone's day by doing absolutely nothing at all.",
+                    "You will finally understand a joke that was told to you five years ago.",
+                    "You will be the first person to step foot on a newly discovered territory.",
+                    "You will gain a superpower but it will only work when you are asleep.",
+                    "You will find the perfect pair of shoes on your first try.",
+                    "You will be mentioned in a history book a hundred years from now.",
+                    "You will survive a minor inconvenience with incredible grace.",
+                    "You will find a way to make your favorite food healthy and delicious.",
+                    "You will realize that the thing you were looking for was in your hand the whole time.",
+                    "You will accidentally start a viral trend involving a rubber duck and a toaster.",
+                    "A stray dog will lead you to a location that holds a significant childhood memory.",
+                    "You will be offered a job as a professional ice cream taster within the next six months.",
+                    "You will find an ancient coin that grants you exactly one very specific wish.",
+                    "You will successfully cook a five-course meal without burning a single thing.",
+                    "You will receive a letter addressed to you from fifty years in the future.",
+                    "You will win a lifetime supply of your favorite snack by winning a weird contest.",
+                    "You will find out that you are the rightful heir to a very small and strange castle.",
+                    "You will have a dream that accurately predicts the winning sports scores for next week.",
+                    "You will become an expert at a hobby you currently know absolutely nothing about.",
+                    "You will be the reason a major scientific discovery is made by complete accident.",
+                    "You will find a shortcut to your destination that saves you exactly thirty-two minutes.",
+                    "You will receive a compliment from a stranger that boosts your confidence for a month.",
+                    "You will solve a mystery that has been bothering your neighborhood for decades.",
+                    "You will wake up one morning and realize you can suddenly play the piano perfectly.",
+                    "You will be gifted a plant that grows much faster and taller than it is supposed to.",
+                    "You will find a message in a bottle that was meant specifically for you.",
+                    "You will be the only person to witness a rare astronomical event from your balcony.",
+                    "You will win a staring contest against a very determined owl.",
+                    "You will discover that your ancestors were actually legendary pirates of the high seas."
+                ]
+
+                const randomPrediction = predictions[Math.floor(Math.random() * predictions.length)]
+                let mentionUser = user === sender ? 'themselves' : `@${user.split('@')[0]}`
+
+                await conn.sendMessage(from, { 
+                    text: `🔮 *Future Prediction for ${mentionUser}:*\n\n"${randomPrediction}"`,
+                    mentions: [sender, user]
+                }, { quoted: m })
+                    }
+
+            
+
+
             if (body.startsWith('@inventory')) {
                 const userId = sender
                 if (!db[userId]) return reply("You don't have an account yet!")
