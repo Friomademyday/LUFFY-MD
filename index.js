@@ -538,6 +538,74 @@ if (body.startsWith('@kaminari')) {
 }
 
 
+
+
+if (body.startsWith('@gay')) {
+                let target = m.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0] || m.message.extendedTextMessage?.contextInfo?.participant || sender
+                const percentage = Math.floor(Math.random() * 101)
+                let status = ''
+                if (percentage < 25) status = 'MF STRAIGHT UP GEHHH 🙏'
+                else if (percentage < 50) status = 'WHY ARE YOU GAY 🌝'
+                else if (percentage < 80) status = 'MEH IT\'S GIVING 2019 LILNASX YOU\'LL COME OUT SOON ENOUGH'
+                else status = 'YOU DON\'T NEED A METER TO KNOW YOU\'RE GAY TWIN 🤣'
+                
+                const msg = `🏳️‍🌈 *${toMono('𝙶𝙰𝚈 𝚁𝙰𝚃𝙴')}* 🏳️‍🌈\n\n𝚃𝙰𝚁𝙶𝙴𝚃: @${target.split('@')[0].toUpperCase()}\n𝚁𝙰𝚃𝙴: *${percentage}%*\n\n${status}`
+                await conn.sendMessage(from, { text: msg, mentions: [target] }, { quoted: m })
+            }
+
+            if (body.startsWith('@simp')) {
+                let target = m.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0] || m.message.extendedTextMessage?.contextInfo?.participant || sender
+                const percentage = Math.floor(Math.random() * 101)
+                let status = ''
+                if (percentage < 30) status = 'YOU, YOU\'RE PEAK 🙂‍↔️🤚 YOU DON\'T SIMP'
+                else if (percentage < 60) status = 'STOP BEING A SIMP THEY DON\'T WANT YOU TWIN 💔'
+                else status = 'DAMN, YOU\'VE BEEN SIMPING SINCE CORONA 😭🙏'
+                
+                const msg = `🥺 *${toMono('𝚂𝙸𝙼𝙿 𝚁𝙰𝚃𝙴')}* 🥺\n\n𝚃𝙰𝚁𝙶𝙴𝚃: @${target.split('@')[0].toUpperCase()}\n𝚁𝙰𝚃𝙴: *${percentage}%*\n\n${status}`
+                await conn.sendMessage(from, { text: msg, mentions: [target] }, { quoted: m })
+            }
+
+            if (body.startsWith('@stupid')) {
+                let target = m.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0] || m.message.extendedTextMessage?.contextInfo?.participant || sender
+                const percentage = Math.floor(Math.random() * 101)
+                let status = ''
+                if (percentage < 20) status = 'WOAH, IS BLUD EINSTEIN 😭🙏'
+                else if (percentage < 50) status = 'AT THE POINT LET\'S JUST REPLACE THE WORD STUPID WITH YOUR NAME? SOUNDS FAIR'
+                else if (percentage < 85) status = 'IT\'S SAFE TO SAY YOU DON\'T EVEN HAVE A SKULL, TALK-LESS OF A BRAIN 💀🙏'
+                else status = 'WOAH YOUR STUPIDITY IS OFF THE CHARTS, BETTER CALL GUINNESS WORLD RECORD 🙂‍↔️'
+                
+                const msg = `🧠 *${toMono('𝚂𝚃𝚄𝙿𝙸𝙳 𝚁𝙰𝚃𝙴')}* 🧠\n\n𝚃𝙰𝚁𝙶𝙴𝚃: @${target.split('@')[0].toUpperCase()}\n𝚁𝙰𝚃𝙴: *${percentage}%*\n\n${status}`
+                await conn.sendMessage(from, { text: msg, mentions: [target] }, { quoted: m })
+            }
+
+            if (body.startsWith('@handsome')) {
+                let target = m.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0] || m.message.extendedTextMessage?.contextInfo?.participant || sender
+                const percentage = Math.floor(Math.random() * 101)
+                let status = ''
+                if (percentage < 30) status = 'BLUD YOU LOOK LIKE A LIZARD OR SM'
+                else if (percentage < 70) status = 'WELL SELF LOVE FIRST IG?'
+                else status = 'YOU AIN\'T JUST HANDSOME YOU FINE SHYTTT 😭🤚'
+                
+                const msg = `✨ *${toMono('𝙷𝙰𝙽𝙳𝚂𝙾𝙼𝙴 𝚁𝙰𝚃𝙴')}* ✨\n\n𝚃𝙰𝚁𝙶𝙴𝚃: @${target.split('@')[0].toUpperCase()}\n𝚁𝙰𝚃𝙴: *${percentage}%*\n\n${status}`
+                await conn.sendMessage(from, { text: msg, mentions: [target] }, { quoted: m })
+            }
+
+            if (body.startsWith('@horny')) {
+                let target = m.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0] || m.message.extendedTextMessage?.contextInfo?.participant || sender
+                const percentage = Math.floor(Math.random() * 101)
+                let status = ''
+                if (percentage < 30) status = 'YOUR HORNY LEVELS ARE TOO LOW, IT\'S GIVING FERTILITY PROBLEMS'
+                else if (percentage < 70) status = 'TOUCH GRASS BLUD YOU\'RE TOO HORNY'
+                else status = 'YOU NEED SOME ANTI HORNY TABS'
+                
+                const msg = `🥵 *${toMono('𝙷𝙾𝚁𝙽𝚈 𝚁𝙰𝚃𝙴')}* 🥵\n\n𝚃𝙰𝚁𝙶𝙴𝚃: @${target.split('@')[0].toUpperCase()}\n𝚁𝙰𝚃𝙴: *${percentage}%*\n\n${status}`
+                await conn.sendMessage(from, { text: msg, mentions: [target] }, { quoted: m })
+            }
+
+
+
+            
+
 if (body.startsWith('@slap')) {
                 let user = m.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0] || m.message.extendedTextMessage?.contextInfo?.participant
                 if (!user) return await conn.sendMessage(from, { text: '❌ Tag someone or reply to their message to slap them!' })
