@@ -625,6 +625,106 @@ if (body.startsWith('@characters')) {
                 }, { quoted: m })
                     }
 
+
+            if (body.startsWith('@time')) {
+                const time = new Date().toLocaleTimeString('en-US', { hour12: true, hour: '2-digit', minute: '2-digit' })
+                const timeMsg = `⬩ ▬▬▬▬▬▬▬▬▬▬▬▬▬ ⬩\n` +
+                                `  *「 🕘 𝚃𝙸𝙼𝙴 🕘 」*\n\n` +
+                                `𝚃𝙷𝙴 𝙲𝚄𝚁𝚁𝙴𝙽𝚃 𝚃𝙸𝙼𝙴 𝙸𝚂:\n` +
+                                `*${time}*\n` +
+                                `⬩ ▬▬▬▬▬▬▬▬▬▬▬▬▬ ⬩`
+                await conn.sendMessage(from, { text: timeMsg }, { quoted: m })
+            }
+
+            if (body.startsWith('@date')) {
+                const date = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
+                const dateMsg = `⬩ ▬▬▬▬▬▬▬▬▬▬▬▬▬ ⬩\n` +
+                                `  *「 📅 𝙳𝙰𝚃𝙴 📅 」*\n\n` +
+                                `𝚃𝙾𝙳𝙰𝚈 𝙸𝚂:\n` +
+                                `*${date}*\n` +
+                                `⬩ ▬▬▬▬▬▬▬▬▬▬▬▬▬ ⬩`
+                await conn.sendMessage(from, { text: dateMsg }, { quoted: m })
+            }
+
+            if (body.startsWith('@runtime')) {
+                const uptime = process.uptime()
+                const hours = Math.floor(uptime / 3600)
+                const minutes = Math.floor((uptime % 3600) / 60)
+                const seconds = Math.floor(uptime % 60)
+                const runMsg = `⬩ ▬▬▬▬▬▬▬▬▬▬▬▬▬ ⬩\n` +
+                               `  *「 ⚙️ 𝚁𝚄𝙽𝚃𝙸𝙼𝙴 ⚙️ 」*\n\n` +
+                               `𝙻𝚄𝙵𝙵𝚈-𝙼𝙳 𝙷𝙰𝚂 𝙱𝙴𝙴𝙽 𝚂𝙰𝙸𝙻𝙸𝙽𝙶 𝙵𝙾𝚁:\n` +
+                               `*${hours}𝚑 ${minutes}𝚖 ${seconds}𝚜*\n` +
+                               `⬩ ▬▬▬▬▬▬▬▬▬▬▬▬▬ ⬩`
+                await conn.sendMessage(from, { text: runMsg }, { quoted: m })
+                                                                }
+
+
+if (body.startsWith('@ascii')) {
+                const text = body.slice(7).trim()
+                if (!text) return await conn.sendMessage(from, { text: '❌ Please provide text! Example: @ascii Luffy' }, { quoted: m })
+                
+                // Omo who tf would even use this tbh??? bruh 
+                let asciiMsg = `⬩ ▬▬▬▬▬▬▬▬▬▬▬▬▬ ⬩\n` +
+                               `  *「 🏴‍☠️ 𝙰𝚂𝙲𝙸𝙸 𝙰𝚁𝚃 🏴‍☠️ 」*\n\n` +
+                               `\`\`\`\n` +
+                               `+${'-'.repeat(text.length + 2)}+\n` +
+                               `| ${text.toUpperCase()} |\n` +
+                               `+${'-'.repeat(text.length + 2)}+\n` +
+                               `\`\`\`\n` +
+                               `⬩ ▬▬▬▬▬▬▬▬▬▬▬▬▬ ⬩`
+                await conn.sendMessage(from, { text: asciiMsg }, { quoted: m })
+            }
+
+            if (body.startsWith('@count')) {
+                const text = body.slice(7).trim()
+                if (!text) return await conn.sendMessage(from, { text: '❌ Please provide text to count!' }, { quoted: m })
+                
+                const charCount = text.length
+                const wordCount = text.split(/\s+/).filter(word => word.length > 0).length
+                
+                const countMsg = `⬩ ▬▬▬▬▬▬▬▬▬▬▬▬▬ ⬩\n` +
+                                 `  *「 📊 𝚃𝙴𝚇𝚃 𝙲𝙾𝚄𝙽𝚃𝙴𝚁 📊 」*\n\n` +
+                                 `📝 *𝚃𝙴𝚇𝚃:* ${text}\n\n` +
+                                 `🔢 *𝙲𝙷𝙰𝚁𝙰𝙲𝚃𝙴𝚁𝚂:* ${charCount}\n` +
+                                 `📖 *𝚆𝙾𝚁𝙳𝚂:* ${wordCount}\n` +
+                                 `⬩ ▬▬▬▬▬▬▬▬▬▬▬▬▬ ⬩`
+                await conn.sendMessage(from, { text: countMsg }, { quoted: m })
+                    }
+
+
+if (body.startsWith('@caps')) {
+                const text = body.slice(6).trim()
+                if (!text) return await conn.sendMessage(from, { text: '❌ Please provide text!' }, { quoted: m })
+                const upperText = text.toUpperCase()
+                const capsMsg = `⬩ ▬▬▬▬▬▬▬▬▬▬▬▬▬ ⬩\n` +
+                                `  *「 🔠 𝙲𝙰𝙿𝚂 🔠 」*\n\n` +
+                                `${upperText}\n` +
+                                `⬩ ▬▬▬▬▬▬▬▬▬▬▬▬▬ ⬩`
+                await conn.sendMessage(from, { text: capsMsg }, { quoted: m })
+            }
+
+            if (body.startsWith('@lower')) {
+                const text = body.slice(7).trim()
+                if (!text) return await conn.sendMessage(from, { text: '❌ Please provide text!' }, { quoted: m })
+                const lowerText = text.toLowerCase()
+                const lowerMsg = `⬩ ▬▬▬▬▬▬▬▬▬▬▬▬▬ ⬩\n` +
+                                 `  *「 🔡 𝙻𝙾𝚆𝙴𝚁 🔡 」*\n\n` +
+                                 `${lowerText}\n` +
+                                 `⬩ ▬▬▬▬▬▬▬▬▬▬▬▬▬ ⬩`
+                await conn.sendMessage(from, { text: lowerMsg }, { quoted: m })
+            }
+
+            if (body.startsWith('@reverse')) {
+                const text = body.slice(9).trim()
+                if (!text) return await conn.sendMessage(from, { text: '❌ Please provide text!' }, { quoted: m })
+                const reversed = text.split('').reverse().join('')
+                const revMsg = `⬩ ▬▬▬▬▬▬▬▬▬▬▬▬▬ ⬩\n` +
+                               `  *「 🔁 𝚁𝙴𝚅𝙴𝚁𝚂𝙴 🔁 」*\n\n` +
+                               `${reversed}\n` +
+                               `⬩ ▬▬▬▬▬▬▬▬▬▬▬▬▬ ⬩`
+                await conn.sendMessage(from, { text: revMsg }, { quoted: m })
+    }
             
             
 
