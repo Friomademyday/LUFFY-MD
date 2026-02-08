@@ -950,6 +950,91 @@ if (body.startsWith('@caps')) {
             }
 
 
+
+
+if (body.startsWith('@loyalty')) {
+                let target = m.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0] || m.message.extendedTextMessage?.contextInfo?.participant || sender
+                const percentage = Math.floor(Math.random() * 101)
+                let status = ``
+                if (percentage < 20) status = `𝚂𝙽𝙰𝙺𝙴 𝙳𝙴𝚃𝙴𝙲𝚃𝙴𝙳. 𝚈𝙾𝚄 𝚆𝙾𝚄𝙻𝙳 𝚂𝙴𝙻𝙻 𝚈𝙾𝚄𝚁 𝙾𝚆𝙽 𝚂𝙾𝚄𝙻 𝙵𝙾𝚁 𝙰 𝙳𝙸𝚂𝙲𝙾𝚄𝙽𝚃 𝙲𝙾𝚄𝙿𝙾𝙽 🐍`
+                else if (percentage < 50) status = `𝚈𝙾𝚄'𝚁𝙴 𝙰𝚂 𝙻𝙾𝚈𝙰𝙻 𝙰𝚂 𝙰 𝚂𝚃𝚁𝙰𝚈 𝙲𝙰𝚃. 𝚆𝙷𝙾𝙴𝚅𝙴𝚁 𝙷𝙰𝚂 𝚃𝙷𝙴 𝙵𝙾𝙾𝙳 𝙷𝙰𝚂 𝚈𝙾𝚄𝚁 𝙷𝙴𝙰𝚁𝚃 💀`
+                else if (percentage < 80) status = `𝚈𝙾𝚄'𝚁𝙴 𝙰 𝚁𝙴𝙰𝙻 𝙾𝙽𝙴. 𝙰 𝙱𝙸𝚃 𝚂𝙷𝙰𝙺𝚈 𝚄𝙽𝙳𝙴𝚁 𝙿𝚁𝙴𝚂𝚂𝚄𝚁𝙴 𝙱𝚄𝚃 𝚈𝙾𝚄 𝚂𝚃𝙰𝚈 🔟`
+                else status = `𝙳𝙸𝙴-𝙷𝙰𝚁𝙳 𝙻𝙾𝚈𝙰𝙻𝚃𝚈. 𝚈𝙾𝚄'𝚁𝙴 𝚃𝙷𝙴 𝚃𝚈𝙿𝙴 𝚃𝙾 𝙶𝙾 𝚃𝙾 𝙹𝙰𝙸𝙻 𝙹𝚄𝚂𝚃 𝚂𝙾 𝚈𝙾𝚄𝚁 𝚃𝚆𝙸𝙽 𝙳𝙾𝙴𝚂𝙽'𝚃 𝙶𝙴𝚃 𝙻𝙾𝙽𝙴𝙻𝚈 🗿`
+                
+                const msg = `🤝 *${toMono('𝙻𝙾𝚈𝙰𝙻𝚃𝚈 𝚁𝙰𝚃𝙴')}* 🤝\n\n𝚃𝙰𝚁𝙶𝙴𝚃: @${target.split('@')[0].toUpperCase()}\n𝚁𝙰𝚃𝙴: *${percentage}%*\n\n${status}`
+                await conn.sendMessage(from, { text: msg, mentions: [target] }, { quoted: m })
+            }
+
+            if (body.startsWith('@evil')) {
+                let target = m.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0] || m.message.extendedTextMessage?.contextInfo?.participant || sender
+                const percentage = Math.floor(Math.random() * 101)
+                let status = ``
+                if (percentage < 20) status = `𝚈𝙾𝚄'𝚁𝙴 𝚃𝙾𝙾 𝙽𝙸𝙲𝙴. 𝙸𝚃'𝚂 𝙰𝙲𝚃𝚄𝙰𝙻𝙻𝚈 𝙳𝙸𝚂𝙶𝚄𝚂𝚃𝙸𝙽𝙶. 𝙳𝙾 𝚂𝙾𝙼𝙴𝚃𝙷𝙸𝙽𝙶 𝙱𝙰𝙳 𝙵𝙾𝚁 𝙾𝙽𝙲𝙴 😇`
+                else if (percentage < 50) status = `𝚈𝙾𝚄'𝚁𝙴 𝙼𝙸𝙻𝙳𝙻𝚈 𝙰𝙽𝙽𝙾𝚈𝙸𝙽𝙶 𝙱𝚄𝚃 𝙽𝙾𝚃 𝙰 𝚅𝙸𝙻𝙻𝙰𝙸𝙽. 𝙹𝚄𝚂𝚃 𝙰 𝙽𝚄𝙸𝚂𝙰𝙽𝙲𝙴 🐝`
+                else if (percentage < 85) status = `𝚈𝙾𝚄 𝙳𝙴𝙵𝙸𝙽𝙸𝚃𝙴𝙻𝚈 𝚁𝙴𝙼𝙸𝙽𝙳 𝚃𝙷𝙴 𝚃𝙴𝙰𝙲𝙷𝙴𝚁 𝙰𝙱𝙾𝚄𝚃 𝚃𝙷𝙴 𝙷𝙾𝙼𝙴𝚆𝙾𝚁𝙺. 𝙳𝙸𝙰𝙱𝙾𝙻𝙸𝙲𝙰𝙻 👿`
+                else status = `𝚂𝚃𝚁𝙰𝙸𝙶𝙷𝚃 𝙵𝚁𝙾𝙼 𝚃𝙷𝙴 𝙿𝙸𝚃𝚂 𝙾𝙵 𝙷𝙴𝙻𝙻. 𝚂𝙰𝚃𝙰𝙽 𝚃𝙰𝙺𝙴𝚂 𝙽𝙾𝚃𝙴𝚂 𝙵𝚁𝙾𝙼 𝚈𝙾𝚄 👹`
+                
+                const msg = `😈 *${toMono('𝙴𝚅𝙸𝙻 𝚁𝙰𝚃𝙴')}* 😈\n\n𝚃𝙰𝚁𝙶𝙴𝚃: @${target.split('@')[0].toUpperCase()}\n𝚁𝙰𝚃𝙴: *${percentage}%*\n\n${status}`
+                await conn.sendMessage(from, { text: msg, mentions: [target] }, { quoted: m })
+            }
+
+            if (body.startsWith('@genius')) {
+                let target = m.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0] || m.message.extendedTextMessage?.contextInfo?.participant || sender
+                const percentage = Math.floor(Math.random() * 101)
+                let status = ``
+                if (percentage < 25) status = `𝚈𝙾𝚄𝚁 𝙱𝚁𝙰𝙸𝙽 𝙲𝙴𝙻𝙻𝚂 𝙰𝚁𝙴 𝙵𝙸𝙶𝙷𝚃𝙸𝙽𝙶 𝙵𝙾𝚁 𝚃𝙷𝙸𝚁𝙳 𝙿𝙻𝙰𝙲𝙴. 𝙸𝚃'𝚂 𝚂𝙰𝙳 𝚃𝙾 𝚆𝙰𝚃𝙲𝙷 🕯️`
+                else if (percentage < 60) status = `𝚂𝙼𝙰𝚁𝚃 𝙴𝙽𝙾𝚄𝙶𝙷 𝚃𝙾 𝙵𝚄𝙽𝙲𝚃𝙸𝙾𝙽, 𝚂𝚃𝚄𝙿𝙸𝙳 𝙴𝙽𝙾𝚄𝙶𝙷 𝚃𝙾 𝙱𝙴 𝙷𝙰𝙿𝙿𝚈. 𝙴𝙽𝙹𝙾𝚈 𝙸𝚃 🧩`
+                else if (percentage < 90) status = `𝙰𝙲𝚃𝚄𝙰𝙻𝙻𝚈 𝙸𝙼𝙿𝚁𝙴𝚂𝚂𝙸𝚅𝙴. 𝚈𝙾𝚄 𝙿𝚁𝙾𝙱𝙰𝙱𝙻𝚈 𝙵𝙸𝙽𝙸𝚂𝙷𝙴𝙳 𝚃𝙷𝙴 𝙴𝚇𝙰𝙼 𝚆𝙷𝙸𝙻𝙴 𝚃𝙷𝙴𝚈 𝚆𝙴𝚁𝙴 𝚂𝚃𝙸𝙻𝙻 𝚁𝙴𝙰𝙳𝙸𝙽𝙶 𝚃𝙷𝙴 𝙽𝙰𝙼𝙴 𝙱𝙾𝚇 🧠`
+                else status = `𝟺𝟶𝟶 𝙸𝚀. 𝚈𝙾𝚄 𝙰𝚁𝙴 𝙻𝙸𝚃𝙴𝚁𝙰𝙻𝙻𝚈 𝙿𝙻𝙰𝚈𝙸𝙽𝙶 𝟺𝙳 𝙲𝙷𝙴𝚂𝚂 𝚆𝙸𝚃𝙷 𝙾𝚄𝚁 𝙴𝚇𝙸𝚂𝚃𝙴𝙽𝙲𝙴 🌌`
+                
+                const msg = `🧠 *${toMono('𝙶𝙴𝙽𝙸𝚄𝚂 𝚁𝙰𝚃𝙴')}* 🧠\n\n𝚃𝙰𝚁𝙶𝙴𝚃: @${target.split('@')[0].toUpperCase()}\n𝚁𝙰𝚃𝙴: *${percentage}%*\n\n${status}`
+                await conn.sendMessage(from, { text: msg, mentions: [target] }, { quoted: m })
+            }
+
+            if (body.startsWith('@haki')) {
+                let target = m.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0] || m.message.extendedTextMessage?.contextInfo?.participant || sender
+                const percentage = Math.floor(Math.random() * 101)
+                let status = ``
+                if (percentage < 20) status = `𝚈𝙾𝚄 𝙷𝙰𝚅𝙴 𝚃𝙷𝙴 𝙿𝚁𝙴𝚂𝙴𝙽𝙲𝙴 𝙾𝙵 𝙰 𝙲𝙰𝚁𝙳𝙱𝙾𝙰𝚁𝙳 𝙱𝙾𝚇. 𝚄𝚃𝚃𝙴𝚁𝙻𝚈 𝚆𝙴𝙰𝙺 💨`
+                else if (percentage < 50) status = `𝙼𝙴𝙳𝙸𝙾𝙲𝚁𝙴 𝙰𝚄𝚁𝙰. 𝚈𝙾𝚄 𝙼𝙸𝙶𝙷𝚃 𝚂𝙲𝙰𝚁𝙴 𝙰 𝙺𝙸𝚃𝚃𝙴𝙽 𝙸𝙵 𝚈𝙾𝚄 𝚂𝙷𝙾𝚄𝚃 𝚁𝙴𝙰𝙻𝙻𝚈 𝙻𝙾𝚄𝙳 🐱`
+                else if (percentage < 85) status = `𝚂𝚃𝚁𝙾𝙽𝙶 𝚆𝙸𝙻𝙻𝙿𝙾𝚆𝙴𝚁. 𝙿𝙴𝙾𝙿𝙻𝙴 𝙰𝙲𝚃𝚄𝙰𝙻𝙻𝚈 𝚂𝚃𝙾𝙿 𝚃𝙰𝙻𝙺𝙸𝙽𝙶 𝚆𝙷𝙴𝙽 𝚈𝙾𝚄 𝙴𝙽𝚃𝙴𝚁 𝚃𝙷𝙴 𝚁𝙾𝙾𝙼 ⚡`
+                else status = `𝚄𝙽𝚃𝙾𝚄𝙲𝙷𝙰𝙱𝙻𝙴 𝙴𝙽𝙴𝚁𝙶𝚈. 𝙾𝙽𝙴 𝙻𝙾𝙾𝙺 𝙰𝙽𝙳 𝚃𝙷𝙴𝙸𝚁 𝙺𝙽𝙴𝙴𝚂 𝚂𝚃𝙰𝚁𝚃 𝚂𝙷𝙰𝙺𝙸𝙽𝙶 👑`
+                
+                const msg = `✨ *${toMono('𝙰𝚄𝚁𝙰 𝙻𝙴𝚅𝙴𝙻')}* ✨\n\n𝚃𝙰𝚁𝙶𝙴𝚃: @${target.split('@')[0].toUpperCase()}\n𝚁𝙰𝚃𝙴: *${percentage}%*\n\n${status}`
+                await conn.sendMessage(from, { text: msg, mentions: [target] }, { quoted: m })
+            }
+
+            if (body.startsWith('@bravery')) {
+                let target = m.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0] || m.message.extendedTextMessage?.contextInfo?.participant || sender
+                const percentage = Math.floor(Math.random() * 101)
+                let status = ``
+                if (percentage < 25) status = `𝚈𝙾𝚄'𝚁𝙴 𝚂𝙲𝙰𝚁𝙴𝙳 𝙾𝙵 𝚈𝙾𝚄𝚁 𝙾𝚆𝙽 𝚂𝙷𝙰𝙳𝙾𝚆. 𝙶𝙾 𝙱𝙰𝙲𝙺 𝚄𝙽𝙳𝙴𝚁 𝚃𝙷𝙴 𝙱𝙴𝙳 🧺`
+                else if (percentage < 60) status = `𝚈𝙾𝚄'𝙳 𝙵𝙸𝙶𝙷𝚃 𝙱𝚄𝚃 𝙾𝙽𝙻𝚈 𝙸𝙵 𝚈𝙾𝚄𝚁 𝙿𝙷𝙾𝙽𝙴 𝙸𝚂 𝙲𝙷𝙰𝚁𝙶𝙴𝙳 𝙰𝙽𝙳 𝚃𝙷𝙴 𝙻𝙸𝙶𝙷𝚃𝚂 𝙰𝚁𝙴 𝙾𝙽 💡`
+                else if (percentage < 90) status = `𝙰𝙽 𝙰𝙱𝚂𝙾𝙻𝚄𝚃𝙴 𝚆𝙰𝚁𝚁𝙸𝙾𝚁. 𝚈𝙾𝚄 𝙳𝙾𝙽'𝚃 𝙱𝙻𝙸𝙽𝙺 𝚆𝙷𝙴𝙽 𝚃𝙷𝙴 𝙲𝙷𝙰𝙾𝚂 𝚂𝚃𝙰𝚁𝚃𝚂 ⚔️`
+                else status = `𝙵𝙴𝙰𝚁𝙻𝙴𝚂𝚂. 𝚈𝙾𝚄 𝙿𝚁𝙾𝙱𝙰𝙱𝙻𝚈 𝙴𝙰𝚃 𝙲𝙴𝚁𝙴𝙰𝙻 𝚆𝙸𝚃𝙷 𝚆𝙰𝚃𝙴𝚁 𝙹𝚄𝚂𝚃 𝚃𝙾 𝙵𝙴𝙴𝙻 𝚂𝙾𝙼𝙴𝚃𝙷𝙸𝙽𝙶 🦁`
+                
+                const msg = `🦁 *${toMono('𝙱𝚁𝙰𝚅𝙴𝚁𝚈 𝚁𝙰𝚃𝙴')}* 🦁\n\n𝚃𝙰𝚁𝙶𝙴𝚃: @${target.split('@')[0].toUpperCase()}\n𝚁𝙰𝚃𝙴: *${percentage}%*\n\n${status}`
+                await conn.sendMessage(from, { text: msg, mentions: [target] }, { quoted: m })
+            }
+
+            
+
+            if (body.startsWith('@luck')) {
+                let target = m.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0] || m.message.extendedTextMessage?.contextInfo?.participant || sender
+                const percentage = Math.floor(Math.random() * 101)
+                let status = ``
+                if (percentage < 20) status = `𝙸𝙵 𝙸𝚃 𝚁𝙰𝙸𝙽𝙴𝙳 𝚂𝙾𝚄𝙿, 𝚈𝙾𝚄'𝙳 𝙱𝙴 𝙾𝚄𝚃𝚂𝙸𝙳𝙴 𝚆𝙸𝚃𝙷 𝙰 𝙵𝙾𝚁𝙺. 𝚄𝙽𝙻𝚄𝙲𝙺𝚈 𝙰𝙵 🌧️`
+                else if (percentage < 50) status = `𝚈𝙾𝚄'𝚁𝙴 𝚃𝙷𝙴 𝚁𝙴𝙰𝚂𝙾𝙽 𝚃𝙷𝙴 𝚅𝙴𝙽𝙳𝙸𝙽𝙶 𝙼𝙰𝙲𝙷𝙸𝙽𝙴 𝙴𝙰𝚃𝚂 𝚃𝙷𝙴 𝙼𝙾𝙽𝙴𝚈 🎟️`
+                else if (percentage < 85) status = `𝚈𝙾𝚄 𝙰𝙻𝚆𝙰𝚈𝚂 𝙵𝙸𝙽𝙳 𝙰 𝙿𝙰𝚁𝙺𝙸𝙽𝙶 𝚂𝙿𝙾𝚃 𝙸𝙽 𝙵𝚁𝙾𝙽𝚃 𝙾𝙵 𝚃𝙷𝙴 𝙳𝙾𝙾𝚁. 𝙽𝙸𝙲𝙴 🍀`
+                else status = `𝙶𝙾𝙳'𝚂 𝙵𝙰𝚅𝙾𝚁𝙸𝚃𝙴. 𝚈𝙾𝚄 𝙲𝙾𝚄𝙻𝙳 𝙵𝙰𝙻𝙻 𝙾𝙵𝙵 𝙰 𝙲𝙻𝙸𝙵𝙵 𝙰𝙽𝙳 𝙻𝙰𝙽𝙳 𝙾𝙽 𝙰 𝙿𝙸𝙻𝙴 𝙾𝙵 𝙲𝙰𝚂𝙷 🏆`
+                
+                const msg = `🍀 *${toMono('𝙻𝚄𝙲𝙺 𝚁𝙰𝚃𝙴')}* 🍀\n\n𝚃𝙰𝚁𝙶𝙴𝚃: @${target.split('@')[0].toUpperCase()}\n𝚁𝙰𝚃𝙴: *${percentage}%*\n\n${status}`
+                await conn.sendMessage(from, { text: msg, mentions: [target] }, { quoted: m })
+            }
+
+
+            
+
             if (body.startsWith('@kakegurui')) {
                 const charData = JSON.parse(fs.readFileSync('./characters.json', 'utf8'))
                 const userId = sender
