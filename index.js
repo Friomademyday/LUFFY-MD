@@ -1526,6 +1526,14 @@ Wallet: ${db[userId].balance.toLocaleString()} 🪙`
 }
 
 
+            if (body.startsWith('@8ball')) {
+                const text = body.slice(7).trim()
+                if (!text) return await conn.sendMessage(from, { text: '❌ Ask a question! Example: @8ball will I become king?' }, { quoted: m })
+                const responses = ['Yes', 'No', 'Maybe', 'Most likely', 'Absolutely', 'Not a chance', 'Omo sha', '50/50']
+                const response = responses[Math.floor(Math.random() * responses.length)]
+                await conn.sendMessage(from, { text: `🎱 *𝟾-𝙱𝙰𝙻𝙻:* ${response}` }, { quoted: m })
+            }
+
 if (body.startsWith('@hidetag')) {
                 const isGroup = from.endsWith('@g.us')
                 if (!isGroup) return reply('❌ This command can only be used in groups!')
