@@ -313,7 +313,28 @@ if (body.startsWith('@menu')) {
 
 
 
+if (body.startsWith('@deployment')) {
+                await conn.sendMessage(from, { 
+                    text: `🚀 *LUFFY-MD DEPLOYMENT*\n\nReady to set sail and host your own bot? Follow the official deployment guide here to get started on Render:\n\n🔗 *Link:* https://github.com/Friomademyday/LUFFY-MD#deployment\n\nFollow the steps carefully to get your pairing code! 🏴‍☠️` 
+                }, { quoted: m })
+            }
 
+            if (body.startsWith('@website')) {
+                await conn.sendMessage(from, { 
+                    text: `🌐 *LUFFY-MD OFFICIAL SITE*\n\nCheck out our landing page for more information about the bot, features, and upcoming updates:\n\n🔗 *Link:* https://friomademyday.github.io/THE-FRIO-BOT-LANDING-PAGES/\n\nStay updated with the latest news! 🍖` 
+                }, { quoted: m })
+            }
+
+            if (body.startsWith('@update')) {
+                await conn.sendMessage(from, { text: `Checking • • •` }, { quoted: m })
+                
+                setTimeout(async () => {
+                    await conn.sendMessage(from, { 
+                        text: `✨ *LUFFY-MD UPDATE SYSTEM*\n\nHey @${sender.split('@')[0]}, you're currently on the latest version of LUFFY-MD! Enjoy the journey 👑🏴‍☠️`,
+                        mentions: [sender]
+                    }, { quoted: m })
+                }, 2000)
+            }
 
             
 
@@ -524,7 +545,7 @@ if (body.startsWith('@menu')) {
                 await conn.sendMessage(from, { 
                     video: fs.readFileSync('./BOTMEDIAS/stare.mp4'), 
                     gifPlayback: true, 
-                    caption: `@${sender.split('@')[0]} is staring intensely at ${mentionUser}...`,
+                    caption: `@${sender.split('@')[0]} is staring at ${mentionUser}...`,
                     mentions: [sender, user] 
                 }, { quoted: m })
             }
@@ -1667,7 +1688,7 @@ if (body.startsWith('@jackpot')) {
             
             
             if (body.startsWith('@ping')) {
-                await conn.sendMessage(from, { text: 'Pong! 🏓 THE-FRiO-BOT is active.' }, { quoted: m })
+                await conn.sendMessage(from, { text: 'Pong! LUFFY-MD is active.' }, { quoted: m })
             }
 
             if (body.startsWith('@antilinkon')) {
@@ -2152,7 +2173,7 @@ if (body.startsWith('@lb')) {
                     .sort((a, b) => b.balance - a.balance)
                     .slice(0, 10)
                 
-                let text = `🏆 *THE-FRiO-BOT LEADERBOARD*\n\n`
+                let text = `*LUFFY-MD LEADERBOARD*\n\n`
                 board.forEach((user, i) => {
                     text += `${i + 1}. @${user.id.split('@')[0]} - ${user.balance}\n`
                 })
