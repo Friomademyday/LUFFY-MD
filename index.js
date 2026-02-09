@@ -312,6 +312,12 @@ if (body.startsWith('@menu')) {
 
 
 
+            if (body.startsWith('@rep')) {
+                await conn.sendMessage(from, { 
+                    text: `📂 *LUFFY-MD REPOSITORY*\n\nInterested in exploring the logics and code? You can find the full repository right here. Feel free to fork it.\n\n🔗 *Repository:* https://github.com/Friomademyday/LUFFY-MD\n\nDon't forget to give it a star if you like the project! ⭐🏴‍☠️` 
+                }, { quoted: m })
+            }
+
 
 if (body.startsWith('@deployment')) {
                 await conn.sendMessage(from, { 
