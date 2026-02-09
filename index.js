@@ -310,6 +310,11 @@ if (body.startsWith('@menu')) {
                 await conn.sendMessage(from, { text: '"Him": https://discord.gg/R8g9DDxQ' }, { quoted: m })
             }
 
+
+
+
+
+
             
 
             if (body.startsWith('@ship')) {
@@ -423,19 +428,20 @@ if (body.startsWith('@menu')) {
                 }, { quoted: m })
             }
 
-            if (body.startsWith('@kamehameha')) {
-                let user = m.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0] || m.message.extendedTextMessage?.contextInfo?.participant
-                if (!user) return await conn.sendMessage(from, { text: '❌ Tag someone to blast them!' })
+       /*     if (body.startsWith('@kamehameha')) {
+               let user = m.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0] || m.message.extendedTextMessage?.contextInfo?.participant
+             if (!user) return await conn.sendMessage(from, { text: '❌ Tag someone to blast them!' })
 
                 let mentionUser = user === sender ? 'themselves' : `@${user.split('@')[0]}`
 
                 await conn.sendMessage(from, { 
                     video: fs.readFileSync('./BOTMEDIAS/kamehameha.mp4'), 
-                    gifPlayback: true, 
-                    caption: `@${sender.split('@')[0]} unleashed a massive KAMEHAMEHA on ${mentionUser}!! 🌀⚡`,
-                    mentions: [sender, user] 
-                }, { quoted: m })
-            }
+                  gifPlayback: true, 
+                  caption: `@${sender.split('@')[0]} unleashed a massive KAMEHAMEHA on ${mentionUser}!! 🌀⚡`,
+                mentions: [sender, user] 
+               }, { quoted: m })
+           } 
+            
 
             if (body.startsWith('@rasengan')) {
                 let user = m.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0] || m.message.extendedTextMessage?.contextInfo?.participant
@@ -463,7 +469,8 @@ if (body.startsWith('@menu')) {
                     caption: `@${sender.split('@')[0]} unleashed GETSUGA TENSHO on ${mentionUser}!! 🌙⚔️`,
                     mentions: [sender, user] 
                 }, { quoted: m })
-            }
+            } */
+            
 
             if (body.startsWith('@blackmamba')) {
                 let user = m.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0] || m.message.extendedTextMessage?.contextInfo?.participant
@@ -493,7 +500,7 @@ if (body.startsWith('@menu')) {
                 }, { quoted: m })
             }
 
-            if (body.startsWith('@headpat')) {
+      /*      if (body.startsWith('@headpat')) {
                 let user = m.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0] || m.message.extendedTextMessage?.contextInfo?.participant
                 if (!user) return await conn.sendMessage(from, { text: '❌ Tag someone or reply to their message to give them a headpat!' })
 
@@ -505,7 +512,8 @@ if (body.startsWith('@menu')) {
                     caption: `@${sender.split('@')[0]} gently patted ${mentionUser}'s head! 👋💖`,
                     mentions: [sender, user] 
                 }, { quoted: m })
-            }
+            } */
+            
 
             if (body.startsWith('@stare')) {
                 let user = m.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0] || m.message.extendedTextMessage?.contextInfo?.participant
@@ -620,7 +628,7 @@ if (body.startsWith('@slap')) {
                 }, { quoted: m })
             }
 
-            if (body.startsWith('@kiss')) {
+     /*       if (body.startsWith('@kiss')) {
                 let user = m.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0] || m.message.extendedTextMessage?.contextInfo?.participant
                 if (!user) return await conn.sendMessage(from, { text: '❌ Tag someone or reply to their message to kiss them!' })
 
@@ -660,7 +668,7 @@ if (body.startsWith('@slap')) {
                     caption: `@${sender.split('@')[0]} JUST WHAMMIED TF OUTTA ${mentionUser} 🔨💥`,
                     mentions: [sender, user] 
                 }, { quoted: m })
-            }
+            } */
 
 
 if (body.startsWith('@truth')) {
