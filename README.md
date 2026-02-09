@@ -11,11 +11,18 @@ LUFFY-MD is a powerful and interactive WhatsApp multi-device bot designed to bri
 
 **Theme:** "Until the day Luffy becomes king of the pirates" 🍖🏴‍☠️
 
----
 
-<div align="center">
-<img src="./BOTMEDIAS/luffy.jpg" width="100%" alt="Luffy Adventure">
-</div>
+
+
+## **PURPOSE**
+
+
+LUFFY-MD was not created to perform basic admin features. If you want a member of your group kicked or added, **do it yourself**—you are perfectly capable! This bot is designed to be a companion for entertainment, not a digital janitor. 
+
+It was created strictly for **fun purposes**, which is why the focus is entirely on the Casino system, interactive pirate roleplay, and community games. 
+***
+
+
 
 ## **How to Use**
 
