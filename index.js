@@ -548,6 +548,80 @@ if (body.startsWith('@kaminari')) {
 
 
 
+
+
+            if (body.startsWith('@cheers')) {
+                let user = m.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0] || m.message.extendedTextMessage?.contextInfo?.participant
+                let mentionUser = user ? (user === sender ? 'themselves' : `@${user.split('@')[0]}`) : 'the crew'
+
+                await conn.sendMessage(from, { 
+                    video: fs.readFileSync('./BOTMEDIAS/cheers.mp4'), 
+                    gifPlayback: true, 
+                    caption: `🍻 *@${sender.split('@')[0]} raises a glass with ${mentionUser}! Kanpai!!*`,
+                    mentions: user ? [sender, user] : [sender]
+                }, { quoted: m })
+            }
+
+            if (body.startsWith('@highfive')) {
+                let user = m.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0] || m.message.extendedTextMessage?.contextInfo?.participant
+                if (!user) return await conn.sendMessage(from, { text: '❌ Tag someone to give them a high five!' })
+
+                let mentionUser = user === sender ? 'themselves' : `@${user.split('@')[0]}`
+
+                await conn.sendMessage(from, { 
+                    video: fs.readFileSync('./BOTMEDIAS/highfive.mp4'), 
+                    gifPlayback: true, 
+                    caption: `✋ *@${sender.split('@')[0]} just gave ${mentionUser} a legendary high five!*`,
+                    mentions: [sender, user] 
+                }, { quoted: m })
+            }
+
+            if (body.startsWith('@bite')) {
+                let user = m.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0] || m.message.extendedTextMessage?.contextInfo?.participant
+                if (!user) return await conn.sendMessage(from, { text: '❌ Tag someone to bite them!' })
+
+                let mentionUser = user === sender ? 'themselves' : `@${user.split('@')[0]}`
+
+                await conn.sendMessage(from, { 
+                    video: fs.readFileSync('./BOTMEDIAS/bite.mp4'), 
+                    gifPlayback: true, 
+                    caption: `🦷 *CHOMP! @${sender.split('@')[0]} just bit ${mentionUser}!*`,
+                    mentions: [sender, user] 
+                }, { quoted: m })
+            }
+
+            if (body.startsWith('@wave')) {
+                let user = m.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0] || m.message.extendedTextMessage?.contextInfo?.participant
+                let mentionUser = user ? (user === sender ? 'themselves' : `@${user.split('@')[0]}`) : 'everyone'
+
+                await conn.sendMessage(from, { 
+                    video: fs.readFileSync('./BOTMEDIAS/wave.mp4'), 
+                    gifPlayback: true, 
+                    caption: `👋 *@${sender.split('@')[0]} is waving at ${mentionUser}! Hello!*`,
+                    mentions: user ? [sender, user] : [sender]
+                }, { quoted: m })
+            }
+
+            if (body.startsWith('@poke')) {
+                let user = m.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0] || m.message.extendedTextMessage?.contextInfo?.participant
+                if (!user) return await conn.sendMessage(from, { text: '❌ Tag someone to poke them!' })
+
+                let mentionUser = user === sender ? 'themselves' : `@${user.split('@')[0]}`
+
+                await conn.sendMessage(from, { 
+                    video: fs.readFileSync('./BOTMEDIAS/poke.mp4'), 
+                    gifPlayback: true, 
+                    caption: `👉 *@${sender.split('@')[0]} is poking ${mentionUser}. Hey! Pay attention!*`,
+                    mentions: [sender, user] 
+                }, { quoted: m })
+                    }
+
+
+
+
+            
+
+
 if (body.startsWith('@gay')) {
                 let target = m.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0] || m.message.extendedTextMessage?.contextInfo?.participant || sender
                 const percentage = Math.floor(Math.random() * 101)
