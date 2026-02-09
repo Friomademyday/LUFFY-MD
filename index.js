@@ -744,7 +744,11 @@ if (body.startsWith('@slap')) {
                 }, { quoted: m })
             } */
 
+//If you notice most of the commands are uhh commented out, whenever i update the bot instead of removing old 
+//features i just comment it out, it doesn't mean the logic or code is broken no
+// but, the command wouldn't work, why? because the block is commented out, so just remove the comments and it will 
 
+            
 if (body.startsWith('@truth')) {
                 const fs = require('fs');
                 // Basically checking the file every time so it gets new updates without restarting the bot, so i can add, swap or remove
