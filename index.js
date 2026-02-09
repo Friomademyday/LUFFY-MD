@@ -214,104 +214,74 @@ __________________________________
 _After purchasing a character wait at least a min before activating their skills_`;
             
 
+
+
+
             
-            const menuText = `__________________________________
-
-         《 𝗧𝗛𝗘 - 𝗙𝗥𝗶𝗢 - 𝗕𝗢𝗧 》
-           • 𝙲𝚁𝙴𝙰𝚃𝙴𝙳 𝙱𝚈 𝙵𝚁𝚒𝙾 •
-
-|_________________________________|
-
-𝙋 𝙍 𝙀 𝙁 𝙄 𝙓 = @
-
-__________________________________
-------------🄱🄾🄳🅈-🄲🄼🄳🅂---------
-
-⬩ 𝙼𝙴𝙽𝚄
-⬩ 𝙿𝚁𝙾𝙵𝙸𝙻𝙴
-⬩ 𝚁𝙰𝙽𝙺
-⬩ 𝙾𝚆𝙽𝙴𝚁
-⬩ 𝚁𝙴𝙿𝙾
-⬩ 𝙿𝙸𝙽𝙶
-__________________________________
-➪ ➪ ➪ ➪    𝑴 𝑬 𝑵 𝑼    ➪ ➪ ➪ ➪ 
-
-__________________________________
-------------------🄶🅁🄾🅄🄿--------------
-
-⬩ 𝚃𝙰𝙶𝙰𝙻𝙻
-⬩ 𝙷𝙸𝙳𝙴𝚃𝙰𝙶 
-__________________________________
----------------🄴🄲🄾🄽🄾🄼🅈----------
-
-⬩ 𝙵𝙸𝚁𝚂𝚃𝙲𝙻𝙰𝙸𝙼
-⬩ 𝙳𝙰𝙸𝙻𝚈
-⬩ 𝙲𝙻𝙰𝙸𝙼 
-⬩ 𝙱𝙰𝙽𝙺 
-⬩ 𝙱𝙰𝙻𝙰𝙽𝙲𝙴
-⬩ 𝙻𝙱
-⬩ 𝚁𝙾𝙱
-⬩ 𝙷𝙴𝙰𝚅𝚈𝚁𝙾𝙱
-⬩ 𝙶𝙸𝚅𝙴
-⬩ 𝙶𝙰𝙼𝙱𝙻𝙴
-⬩ 𝚂𝙻𝙾𝚃𝚂
-⬩ 𝙲𝙾𝙸𝙽𝙵𝙻𝙸𝙿
-⬩ 𝙹𝙰𝙲𝙺𝙿𝙾𝚃
-__________________________________
--------------🄿🄰🄽🅃🄷🄴🄾🄽---------
-
-⬩ 𝚂𝙷𝙾𝙿
-⬩ 𝙲𝙷𝙰𝚁𝙰𝙲𝚃𝙴𝚁𝚂
-⬩ 𝙸𝙽𝚅𝙴𝙽𝚃𝙾𝚁𝚈
-__________________________________
-----------------🅂🄾🄲🄸🄰🄻------------
-
-⬩ 𝚂𝙷𝙸𝙿
-⬩ 𝙵𝙻𝙸𝚁𝚃
-⬩ 𝙹𝙾𝙺𝙴
-⬩ 𝙰𝙳𝚅𝙸𝙲𝙴
-⬩ 𝙳𝙰𝚁𝙴
-⬩ 𝚃𝚁𝚄𝚃𝙷
-__________________________________
-------🄸🄽🅃🄴🅁🄰🄲🅃🄸🅅🄴------
-
-⬩ 𝙼𝙰𝚁𝚁𝚈
-⬩ 𝚆𝙷𝙰𝙼
-⬩ 𝙺𝙸𝚂𝚂
-⬩ 𝙷𝚄𝙶 
-⬩ 𝙿𝙰𝚃
-⬩ 𝚂𝙻𝙰𝙿
-⬩ 𝚂𝚃𝙰𝚁𝙴
-⬩ 𝙶𝙰𝚃𝙻𝙸𝙽𝙶 
-⬩ 𝚁𝙴𝙳𝙷𝙰𝚆𝙺
-⬩ 𝙺𝙰𝙼𝙸𝙽𝙰𝚁𝙸
-⬩ 𝙺𝙰𝙼𝙴𝙷𝙰𝙼𝙴𝙷𝙰 
-⬩ 𝚁𝙰𝚂𝙴𝙽𝙶𝙰𝙽 
-⬩ 𝙶𝙴𝚃𝚂𝚄𝙶𝙰𝚃𝙴𝙽𝚂𝙷𝙾 
-⬩ 𝙱𝙻𝙰𝙲𝙺𝙼𝙰𝙼𝙱𝙰
-__________________________________
-------------------🄼🄴🄳🄸🄰--------------
-
-⬩ 𝚃𝚃𝙰 
-__________________________________
-
-
-
-"ᴼᴴᴴ ᴾᴸˢ ᴵ ᴺᴱᴱᴰ ᴬ ᴮᴼᵀ ᵀᴼ ᶜᴴᴬᴺᴳᴱ ᵀᴴᴱ ᴳᴿᴼᵁᴾ ᴾᶠᴾ, ᴬᴿᴿᴳᴴ, ᴹᴬᵀᴱʸ ᵂᴴʸ ᴰᴼᴺ'ᵀ ʸᴼᵁ ᴮᴱᴺᴰ ᴼⱽᴱᴿ ˢᴼ ᵂᴱ ᶜᴬᴺ ᴬᴸˢᴼ ᵀᴬᴷᴱ ᴬ ᵀᴵˢˢᵁᴱ ᴾᴬᴾᴱᴿ ᴬᴺᴰ ᴴᴱᴸᴾ ʸᴼᵁ ˢᵂᴵᴾᴱ ʸᴼᵁᴿ ᴬᴴᴴ?? ᴸᴹᴬᴼ" 
-
-_Enjoy_🐐`; 
+            
+            const menuText = `blank`; 
 if (body.startsWith('@menu')) {
                 await conn.sendMessage(from, { 
                     image: { url: './BOTMEDIAS/v2menu.jpg' }, 
                     caption: menuText 
                 }, { quoted: m })
 }
+
+
+
+
+
+
+
+
+            
             if (body.startsWith('@owner')) {
                 await conn.sendMessage(from, { text: '"Him": https://discord.gg/R8g9DDxQ' }, { quoted: m })
             }
 
+            if (body.startsWith('@help')) {
+                const helpText = `__________________________________
+ ❏     *𝗟 𝗨 𝗙 𝗙 𝗬 - 𝗠 𝗗 - _HELP_*     ❏ 
+_________________________________
+
+*COMMAND NOT RESPONDING:*
+If a command isn't working or isn't responding, it is likely the command wasn't typed properly or the conditions for the command to function haven't been met!
+
+🏴‍☠️ *CRITICAL CHECKLIST:*
+1. *Prefix:* Always use the *@* prefix.
+2. *Mentions:* For social or interaction commands, you MUST tag a user via reply or @.
+3. *Wallet:* For casino/gambling, you must have the amount in your balance.
+
+*ECONOMY TROUBLESHOOTING:*
+• *@rob:* To rob someone, you must have at least *1000 🪙* in your wallet to cover the risk 30% busted fee and the user being robbed should also have at least *1000*, both conditions have to be met.
+• *@heavyrob:* To perform a Heavy Rob, you must have at least *350,000 🪙* in your wallet, the victim should have at least *1,000,000*, both conditions have to be met for this command to be successful
+• *Casino:* Commands like @roll and @roulette require a valid number amount.
+• *Characters:* Go through the @characters list. Many casino and economy commands require you to own specific characters before they can be used i.e Yumeko's skill: @kakegurui
+• *Firstclaim* Can only be used once
+⬩ ▬▬▬▬▬▬▬▬▬▬▬▬▬ ⬩
+                  *𝙋 𝙍 𝙀 𝙁 𝙄 𝙓 = @*
+⬩ ▬▬▬▬▬▬▬▬▬▬▬▬▬ ⬩`
+
+                await conn.sendMessage(from, { 
+                    image: fs.readFileSync('./BOTMEDIAS/help.jpg'), 
+                    caption: helpText 
+                }, { quoted: m })
+            }
 
 
+
+
+            
+
+
+
+
+
+
+
+
+
+            
             if (body.startsWith('@rep')) {
                 await conn.sendMessage(from, { 
                     text: `📂 *LUFFY-MD REPOSITORY*\n\nInterested in exploring the logics and code? You can find the full repository right here. Feel free to fork it.\n\n🔗 *Repository:* https://github.com/Friomademyday/LUFFY-MD\n\nDon't forget to give it a star if you like the project! ⭐🏴‍☠️` 
