@@ -1,0 +1,24 @@
+‎```yaml
+‎name: Generate Lockfile
+‎on:
+‎  push:
+‎    branches: [ main, master ]
+‎  workflow_dispatch:
+‎jobs:
+‎  build:
+‎    runs-on: ubuntu-latest
+‎    steps:
+‎    - uses: actions/checkout@v4
+‎    - name: Use Node.js
+‎      uses: actions/setup-node@v4
+‎      with:
+‎        node-version: 22
+‎    - name: Generate Lockfile
+‎      run: npm install
+‎    - name: Commit Lockfile
+‎run: |
+        git config --global user.name "GitHub Action"
+‎        git config --global user.email "action@github.com"
+‎        git add package-lock.json
+‎        git commit -m "Automated package-lock.json generation" || exit 0
+‎        git push
